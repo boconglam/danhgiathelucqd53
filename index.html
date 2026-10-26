@@ -10,8 +10,7 @@
     <title>AI Đánh Giá Thể Lực Học Sinh - Chuẩn QĐ 53/2008/QĐ-BGDĐT</title>
 
     <!-- FAVICON TRÊN THANH ĐỊA CHỈ -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230ea5e9'/%3E%3Cstop offset='100%25' stop-color='%231d4ed8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ccircle cx='38' cy='14' r='6' fill='%23ffffff'/%3E%3Cpath d='M25 24 L37 24 L45 32 L40 36 L34 30 L29 36 L38 44 L34 54 L27 52 L30 45 L21 38 L25 24 Z' fill='%23ffffff'/%3E%3Cpath d='M14 48 L24 44 L22 51 L12 54 Z' fill='%2338bdf8'/%3E%3Ccircle cx='50' cy='16' r='4' fill='%234ade80'/%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230284c7'/%3E%3Ccircle cx='38' cy='14' r='6' fill='%23ffffff'/%3E%3Cpath d='M25 24 L37 24 L45 32 L40 36 L34 30 L29 36 L38 44 L34 54 L27 52 L30 45 L21 38 L25 24 Z' fill='%23ffffff'/%3E%3Ccircle cx='50' cy='16' r='4' fill='%234ade80'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230284c7'/%3E%3Ccircle cx='38' cy='14' r='6' fill='%23ffffff'/%3E%3Cpath d='M25 24 L37 24 L45 32 L40 36 L34 30 L29 36 L38 44 L34 54 L27 52 L30 45 L21 38 L25 24 Z' fill='%23ffffff'/%3E%3Ccircle cx='50' cy='16' r='4' fill='%234ade80'/%3E%3C/svg%3E">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,31 +18,1801 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- MediaPipe Pose -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <!-- SheetJS -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
+    <!-- CSS NỘI TUYẾN DỰ PHÒNG (ĐẢM BẢO KHÔNG BAO GIỜ BỊ ĐEN MÀN HÌNH KỂ CẢ KHI LỖI MẠNG) -->
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 14px;
+        }
+        .active-tab {
+            background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 3px 12px rgba(2, 132, 199, 0.45);
+            border-color: #38bdf8 !important;
+        }
+        .cam-btn-active {
+            background: #0284c7 !important;
+            color: #ffffff !important;
+            border-color: #38bdf8 !important;
+        }
+        #output-canvas {
+            background: #1e293b;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- HEADER BAR -->
+    <header class="glass-panel border-b border-slate-700 px-3 lg:px-6 py-2.5 m-2 mb-0">
+        <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-sky-600 flex items-center justify-center shadow">
+                    <i class="fa-solid fa-person-running text-white text-base"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm md:text-base font-extrabold tracking-tight text-white leading-tight">AI ĐÁNH GIÁ THỂ LỰC HỌC SINH (QĐ 53)</h1>
+                    <p class="text-[11px] text-sky-300">Gập bụng 30s • Chống đẩy • Bật xa tại chỗ</p>
+                </div>
+            </div>
+
+            <!-- 3 Exercise Tabs -->
+            <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700 gap-1">
+                <button onclick="switchExercise('situp')" id="tab-situp" class="exercise-tab active-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-200 transition flex items-center gap-1.5 border border-transparent cursor-pointer">
+                    <i class="fa-solid fa-mattress-pillow"></i>
+                    <span>1. Gập bụng</span>
+                </button>
+                <button onclick="switchExercise('pushup')" id="tab-pushup" class="exercise-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-200 transition flex items-center gap-1.5 border border-transparent cursor-pointer">
+                    <i class="fa-solid fa-dumbbell"></i>
+                    <span>2. Chống đẩy</span>
+                </button>
+                <button onclick="switchExercise('jump')" id="tab-jump" class="exercise-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-200 transition flex items-center gap-1.5 border border-transparent cursor-pointer">
+                    <i class="fa-solid fa-ruler-horizontal"></i>
+                    <span>3. Bật xa</span>
+                </button>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="flex items-center gap-2">
+                <button onclick="openStandardsModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-600 cursor-pointer">
+                    <i class="fa-solid fa-sliders text-amber-400 mr-1"></i>Tiêu chuẩn
+                </button>
+                <button onclick="exportToExcel()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow cursor-pointer">
+                    <i class="fa-solid fa-file-excel"></i>
+                    <span>Xuất Excel (<span id="export-count-badge">0</span>)</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="flex-1 max-w-[1600px] w-full mx-auto p-2 lg:p-4 space-y-4">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+            
+            <!-- LEFT 8 COLS: CAMERA VIEWPORT & INTEGRATED ON-SCREEN CONTROLS -->
+            <div class="lg:col-span-8 space-y-2.5">
+                
+                <!-- Top Camera Toolbar -->
+                <div class="glass-panel px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <select id="camera-select" onchange="handleCameraSourceChange()" class="bg-slate-900 text-xs font-bold text-white px-2.5 py-1.5 rounded-lg border border-slate-600">
+                            <option value="webcam" selected>📷 Camera Thực tế (Điện thoại / Webcam)</option>
+                            <option value="sim">🤖 Chế độ Mô phỏng AI (Luôn hiển thị)</option>
+                            <option value="ip">📡 DroidCam IP</option>
+                            <option value="file">🎬 Video mẫu</option>
+                        </select>
+
+                        <button onclick="startCameraStream('environment')" id="btn-cam-rear" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white border border-sky-400 flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-camera"></i>
+                            <span>Bật Cam Sau / Webcam</span>
+                        </button>
+                        <button onclick="startCameraStream('user')" id="btn-cam-front" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-sky-600 text-slate-200 border border-slate-600 flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i>
+                            <span>Cam Trước</span>
+                        </button>
+
+                        <div id="webcam-device-wrap" class="hidden sm:flex items-center">
+                            <select id="webcam-device-list" onchange="startWebcamByDeviceId()" class="bg-slate-900 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 max-w-[150px]">
+                                <option value="">Cổng mặc định</option>
+                            </select>
+                        </div>
+
+                        <div id="ip-cam-wrap" class="hidden items-center gap-1">
+                            <input type="text" id="ip-cam-input" value="192.168.1.15" class="bg-slate-900 text-xs text-white px-2 py-1 rounded-lg border border-slate-600 w-28">
+                            <button onclick="connectIpCamera()" class="px-2.5 py-1 bg-sky-600 text-white text-xs font-bold rounded-lg">Kết nối</button>
+                        </div>
+
+                        <div id="file-upload-wrap" class="hidden items-center">
+                            <label class="cursor-pointer px-2.5 py-1 bg-indigo-600 text-white text-xs font-bold rounded-lg">
+                                Chọn Video <input type="file" id="video-file-input" accept="video/*" onchange="loadVideoFile(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2.5">
+                        <label class="flex items-center gap-1 text-xs font-semibold text-amber-300 cursor-pointer select-none">
+                            <input type="checkbox" id="guide-frame-toggle" checked>
+                            <span>🎯 Khung & Thước</span>
+                        </label>
+                        <button onclick="togglePoseDirection()" class="px-2 py-1 rounded-lg bg-slate-800 text-xs text-slate-200 border border-slate-600 cursor-pointer">
+                            <i class="fa-solid fa-arrows-left-right text-sky-400 mr-1"></i>
+                            <span id="pose-dir-label">Trái➔Phải</span>
+                        </button>
+                        <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer select-none">
+                            <input type="checkbox" id="mirror-toggle">
+                            <span>Lật gương</span>
+                        </label>
+                        <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer select-none">
+                            <input type="checkbox" id="sound-toggle" checked>
+                            <span>Beep</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- MAIN VIDEO & CANVAS VIEWPORT -->
+                <div class="relative rounded-2xl overflow-hidden bg-slate-900 border-2 border-sky-500/50 shadow-2xl aspect-video w-full select-none">
+                    <!-- Nguồn Video ẩn -->
+                    <video id="input-video" style="display:none;" autoplay playsinline muted></video>
+                    <img id="ip-stream-img" style="display:none;" crossorigin="anonymous" alt="DroidCam">
+
+                    <!-- Màn hình Canvas chính -->
+                    <canvas id="output-canvas" width="1280" height="720" class="w-full h-full object-contain block cursor-crosshair touch-none"></canvas>
+
+                    <!-- Góc trên bên phải: Trạng thái & Đổi Camera nhanh -->
+                    <div class="absolute top-2.5 right-2.5 z-30 flex items-center gap-1.5">
+                        <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-900/90 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5 shadow">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                            <span id="ai-status-text">Đang chạy</span>
+                        </span>
+                        <button onclick="flipMobileCamera()" class="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold border border-sky-300 shadow flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-camera-rotate"></i>
+                            <span>Đổi Cam</span>
+                        </button>
+                    </div>
+
+                    <!-- Bảng điều chỉnh Giả lập AI (Góc phải) -->
+                    <div id="sim-control-overlay" class="absolute top-12 right-2.5 bg-slate-900/95 border border-sky-500/50 rounded-xl p-2.5 w-52 shadow-xl z-20">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[11px] font-bold text-sky-400"><i class="fa-solid fa-robot mr-1"></i>Mô phỏng AI</span>
+                            <label class="flex items-center gap-1 text-[11px] text-amber-300 cursor-pointer">
+                                <input type="checkbox" id="sim-auto-cycle" checked> Tự tập
+                            </label>
+                        </div>
+                        <div id="sim-angle-controls">
+                            <div class="flex justify-between text-xs text-slate-300">
+                                <span>Góc khớp:</span>
+                                <span id="sim-slider-val" class="font-mono font-bold text-amber-400">145°</span>
+                            </div>
+                            <input type="range" id="sim-angle-slider" min="45" max="175" value="145" oninput="onManualSimSlider()" class="w-full cursor-pointer">
+                        </div>
+                        <div id="sim-jump-controls" class="hidden mt-1.5 pt-1.5 border-t border-slate-700">
+                            <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                <span>Mức bật xa:</span>
+                                <span id="sim-jump-target-val" class="font-mono font-bold text-emerald-400">215 cm</span>
+                            </div>
+                            <input type="range" id="sim-jump-slider" min="100" max="280" value="215" oninput="document.getElementById('sim-jump-target-val').innerText = this.value + ' cm'" class="w-full cursor-pointer mb-1.5">
+                            <button onclick="triggerSimJump()" class="w-full py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg cursor-pointer">
+                                Nhảy Bật Xa Mẫu!
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- THANH NÚT ĐIỀU KHIỂN NẰM NGAY TRONG MÀN HÌNH CAMERA (KHÔNG BỊ XA MÀN HÌNH) -->
+                    <div class="absolute bottom-2 left-2 right-2 z-30 flex flex-wrap items-center justify-between gap-1.5 bg-slate-950/90 border border-slate-600 rounded-xl px-3 py-2 shadow-2xl">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <button onclick="startExam()" id="btn-start" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs md:text-sm shadow flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-play"></i>
+                                <span id="btn-start-text">Bắt đầu 30s [S]</span>
+                            </button>
+
+                            <button onclick="resetExam()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs md:text-sm border border-slate-600 flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-rotate-right text-amber-400"></i>
+                                <span>Thi lại [R]</span>
+                            </button>
+
+                            <button onclick="nextStudent()" class="px-3 py-2 rounded-lg bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs md:text-sm border border-sky-400 flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-user-plus"></i>
+                                <span>Đổi TS [N]</span>
+                            </button>
+
+                            <button onclick="manualSaveResult()" class="px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs md:text-sm shadow flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span>Lưu KQ</span>
+                            </button>
+                        </div>
+
+                        <!-- Nút chuyên biệt cho Bật xa tại chỗ ngay trên màn hình -->
+                        <div id="onscreen-jump-dock" class="hidden items-center gap-1.5">
+                            <button onclick="lockCurrentFootAsTakeoff()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-location-crosshairs"></i>
+                                <span>Đặt Vạch 0cm</span>
+                            </button>
+                            <button onclick="clearLandingMarker()" class="px-2.5 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-600 text-white font-bold text-xs flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-eraser"></i>
+                                <span>Xóa Vạch Rơi</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- THANH THÔNG SỐ BẬT XA TẠI CHỖ (Hiện khi chọn bài số 3) -->
+                <div id="jump-calibration-panel" class="hidden glass-panel p-3 border border-amber-500/50">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                        <div class="bg-slate-900 px-3 py-2 rounded-lg border border-amber-500/40 flex items-center justify-between">
+                            <span class="text-amber-400 font-bold">🚩 Vạch Bắt Đầu:</span>
+                            <span id="jump-start-pos-label" class="font-mono font-bold text-amber-200">0 cm</span>
+                        </div>
+                        <div class="bg-slate-900 px-3 py-2 rounded-lg border border-emerald-500/40 flex items-center justify-between">
+                            <span class="text-emerald-400 font-bold">🎯 Vị Trí Rơi:</span>
+                            <span id="jump-landing-pos-label" class="font-mono font-bold text-emerald-300">Chưa nhảy</span>
+                        </div>
+                        <div class="bg-slate-900 px-3 py-2 rounded-lg border border-sky-500/40 flex items-center justify-between">
+                            <span class="text-sky-400 font-bold">📏 Thước đo:</span>
+                            <div class="flex items-center gap-1">
+                                <input type="number" id="calib-distance-cm" value="250" min="50" max="500" onchange="updateJumpCalibration()" class="w-14 bg-slate-800 text-sky-300 font-mono font-bold text-xs px-1 py-0.5 rounded border border-slate-600 text-center">
+                                <span>cm</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 px-3 py-2 rounded-lg border border-slate-600 flex items-center justify-between">
+                            <span class="text-slate-300 font-bold">Nhập KQ:</span>
+                            <div class="flex items-center gap-1">
+                                <input type="number" id="manual-jump-cm" placeholder="215" class="w-14 bg-slate-800 text-emerald-400 font-mono font-bold text-xs px-1 py-0.5 rounded border border-slate-600 text-center">
+                                <button onclick="applyManualJumpScore()" class="px-2 py-0.5 bg-emerald-600 text-white font-bold rounded cursor-pointer">Ghi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT 4 COLS: THÔNG TIN THÍ SINH & ĐÁNH GIÁ -->
+            <div class="lg:col-span-4 space-y-4">
+                
+                <!-- 1. Thông tin thí sinh -->
+                <div class="glass-panel p-4 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-id-card-clip text-sky-400"></i>
+                            <h2 class="font-bold text-xs uppercase tracking-wider text-white">Thông Tin Thí Sinh</h2>
+                        </div>
+                        <select id="quick-roster-select" onchange="selectFromRoster()" class="bg-slate-900 border border-slate-600 text-xs text-sky-300 rounded-lg px-2 py-1">
+                            <option value="">-- Chọn HS mẫu --</option>
+                            <option value="Bồ Thiên Lộc|10A5|Nam|16">1. Bồ Thiên Lộc (10A5)</option>
+                            <option value="Nguyễn Ngọc Bảo Trân|10A5|Nu|15">2. Nguyễn Ngọc Bảo Trân (10A5)</option>
+                            <option value="Trần Minh Hiếu|11B2|Nam|16">3. Trần Minh Hiếu (11B2)</option>
+                            <option value="Lê Thị Thanh Tâm|12C1|Nu|17">4. Lê Thị Thanh Tâm (12C1)</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <div>
+                            <label class="block text-xs text-slate-300 mb-1">Họ và Tên học sinh</label>
+                            <input type="text" id="student-name" value="Bồ Thiên Lộc" oninput="syncStudentInfo()" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-3 py-1.5 text-sm font-bold text-white">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">Lớp</label>
+                                <input type="text" id="student-class" value="10A5" oninput="syncStudentInfo()" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-2 py-1.5 text-sm font-bold text-white text-center">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">Giới tính</label>
+                                <select id="student-gender" onchange="syncStudentInfo()" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-2 py-1.5 text-sm font-bold text-white">
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nu">Nữ</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">Tuổi</label>
+                                <select id="student-age" onchange="syncStudentInfo()" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-2 py-1.5 text-sm font-bold text-white">
+                                    <option value="15">15 tuổi</option>
+                                    <option value="16" selected>16 tuổi</option>
+                                    <option value="17">17 tuổi</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Kết quả & Xếp loại trực tiếp -->
+                <div class="glass-panel p-4 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-gauge-high text-emerald-400"></i>
+                            <h2 class="font-bold text-xs uppercase tracking-wider text-white">Đánh Giá Trực Tiếp</h2>
+                        </div>
+                        <span id="current-exercise-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300">
+                            Gập bụng 30s
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div class="bg-slate-900 border border-slate-700 rounded-xl p-3 text-center">
+                            <span class="text-[11px] font-bold uppercase text-slate-400 block" id="metric-title-label">SỐ LẦN HỢP LỆ</span>
+                            <div class="text-3xl font-extrabold font-mono text-emerald-400 mt-1" id="live-score-display">0</div>
+                            <span class="text-xs text-slate-400" id="metric-unit-label">lần / 30 giây</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-700 rounded-xl p-3 text-center flex flex-col justify-center items-center">
+                            <span class="text-[11px] font-bold uppercase text-slate-400 block">XẾP LOẠI QĐ 53</span>
+                            <div id="live-eval-badge" class="mt-1 px-3 py-1 rounded-lg text-sm font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/40">
+                                Chưa đạt
+                            </div>
+                            <span class="text-[11px] text-slate-300 mt-1" id="live-target-hint">Đạt: ≥ 14 | Tốt: ≥ 20</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-700 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-200"><i class="fa-solid fa-bone text-amber-400 mr-1"></i>Ngưỡng Góc & Thời gian</span>
+                            <button onclick="resetThresholdsToDefault()" class="text-xs text-sky-400 underline cursor-pointer">Mặc định</button>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="bg-slate-950 p-1.5 rounded-lg border border-slate-700 text-center">
+                                <label class="text-[10px] text-slate-400 block">Ngưỡng Dưới</label>
+                                <input type="number" id="input-thresh-down" value="130" onchange="updateExerciseThresholds()" class="w-full bg-transparent text-center font-mono font-bold text-xs text-sky-400">
+                            </div>
+                            <div class="bg-slate-950 p-1.5 rounded-lg border border-slate-700 text-center">
+                                <label class="text-[10px] text-slate-400 block">Ngưỡng Trên</label>
+                                <input type="number" id="input-thresh-up" value="65" onchange="updateExerciseThresholds()" class="w-full bg-transparent text-center font-mono font-bold text-xs text-emerald-400">
+                            </div>
+                            <div class="bg-slate-950 p-1.5 rounded-lg border border-slate-700 text-center">
+                                <label class="text-[10px] text-slate-400 block">Thời gian (s)</label>
+                                <input type="number" id="input-total-time" value="30" min="5" max="300" onchange="updateExerciseThresholds()" class="w-full bg-transparent text-center font-mono font-bold text-xs text-amber-400">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Thống kê nhanh -->
+                <div class="glass-panel p-3 grid grid-cols-3 gap-2 text-center">
+                    <div class="bg-slate-900 p-2 rounded-xl border border-slate-700">
+                        <span class="text-xs text-slate-400 block">Tổng lượt</span>
+                        <span id="stat-total-count" class="text-base font-extrabold text-white font-mono">0</span>
+                    </div>
+                    <div class="bg-slate-900 p-2 rounded-xl border border-emerald-500/30">
+                        <span class="text-xs text-emerald-400 block">Mức Tốt</span>
+                        <span id="stat-good-count" class="text-base font-extrabold text-emerald-400 font-mono">0</span>
+                    </div>
+                    <div class="bg-slate-900 p-2 rounded-xl border border-sky-500/30">
+                        <span class="text-xs text-sky-400 block">Mức Đạt</span>
+                        <span id="stat-pass-count" class="text-base font-extrabold text-sky-400 font-mono">0</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BẢNG KẾT QUẢ EXCEL -->
+        <div class="glass-panel p-4 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3">
+                <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-table-list text-emerald-400"></i>
+                    Bảng Kết Quả Kiểm Tra Thể Lực (Xuất File Excel)
+                </h2>
+                <div class="flex flex-wrap items-center gap-2">
+                    <select id="filter-exercise" onchange="renderRecordsTable()" class="bg-slate-900 border border-slate-600 rounded-lg px-2.5 py-1 text-xs text-white">
+                        <option value="ALL">Tất cả nội dung</option>
+                        <option value="situp">1. Gập bụng (30s)</option>
+                        <option value="pushup">2. Chống đẩy</option>
+                        <option value="jump">3. Bật xa tại chỗ</option>
+                    </select>
+                    <button onclick="addSampleRecords()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-600 cursor-pointer">+ Dữ liệu mẫu</button>
+                    <button onclick="clearAllRecords()" class="px-2.5 py-1 rounded-lg bg-rose-900/60 hover:bg-rose-800 text-xs text-rose-200 border border-rose-700 cursor-pointer">Xóa bảng</button>
+                    <button onclick="exportToExcel()" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer">
+                        <i class="fa-solid fa-download mr-1"></i>Tải Excel (.xlsx)
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-900 text-slate-300 text-xs uppercase border-b border-slate-700">
+                            <th class="py-2.5 px-3 text-center">STT</th>
+                            <th class="py-2.5 px-3">Họ và Tên</th>
+                            <th class="py-2.5 px-3 text-center">Lớp</th>
+                            <th class="py-2.5 px-3 text-center">Giới tính</th>
+                            <th class="py-2.5 px-3 text-center">Tuổi</th>
+                            <th class="py-2.5 px-3">Nội dung</th>
+                            <th class="py-2.5 px-3 text-center">Kết quả</th>
+                            <th class="py-2.5 px-3 text-center">Thời gian</th>
+                            <th class="py-2.5 px-3 text-center">Xếp loại</th>
+                            <th class="py-2.5 px-3 text-center">Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records-tbody" class="divide-y divide-slate-800 text-xs md:text-sm"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL BẢNG TIÊU CHUẨN -->
+    <div id="standards-modal" class="fixed inset-0 z-50 hidden bg-black/80 flex items-center justify-center p-4">
+        <div class="glass-panel max-w-3xl w-full p-5 border border-slate-600 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                <h3 class="text-base font-extrabold text-white">Bảng Tiêu Chuẩn Thể Lực (QĐ 53/2008/QĐ-BGDĐT)</h3>
+                <button onclick="closeStandardsModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-white cursor-pointer">✕</button>
+            </div>
+            <div id="standards-modal-body" class="space-y-4 text-xs"></div>
+            <div class="flex justify-end gap-2 pt-3 border-t border-slate-700">
+                <button onclick="resetStandardsDefault()" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 text-xs font-semibold cursor-pointer">Khôi phục mặc định</button>
+                <button onclick="closeStandardsModal()" class="px-4 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-bold cursor-pointer">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
+        // ============================================================================
+        // 0. POLYFILL AN TOÀN CHO CANVAS (TRÁNH LỖI MÀN HÌNH ĐEN TRÊN MỌI TRÌNH DUYỆT)
+        // ============================================================================
+        function drawSafeRoundedRect(ctx, x, y, w, h, r) {
+            const radius = Math.min(r || 8, Math.abs(w) / 2, Math.abs(h) / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + w - radius, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+            ctx.lineTo(x + w, y + h - radius);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+            ctx.lineTo(x + radius, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        // ============================================================================
+        // 1. BẢNG TIÊU CHUẨN THỂ LỰC (QĐ 53/2008/QĐ-BGDĐT)
+        // ============================================================================
+        const DEFAULT_STANDARDS = {
+            situp: {
+                title: "Nằm ngửa gập bụng (lần / 30s)", unit: "lần",
+                Nam: { 15: [13, 19], 16: [14, 20], 17: [15, 21] },
+                Nu:  { 15: [12, 16], 16: [13, 17], 17: [14, 18] }
+            },
+            pushup: {
+                title: "Nằm sấp chống đẩy (lần)", unit: "lần",
+                Nam: { 15: [15, 22], 16: [16, 24], 17: [18, 26] },
+                Nu:  { 15: [10, 15], 16: [11, 16], 17: [12, 18] }
+            },
+            jump: {
+                title: "Bật xa tại chỗ (cm)", unit: "cm",
+                Nam: { 15: [195, 215], 16: [203, 225], 17: [210, 232] },
+                Nu:  { 15: [150, 168], 16: [153, 172], 17: [155, 175] }
+            }
+        };
+
+        let STANDARDS = DEFAULT_STANDARDS;
+        try {
+            const savedStd = localStorage.getItem('pe_ai_standards');
+            if (savedStd) STANDARDS = JSON.parse(savedStd);
+        } catch (e) {}
+
+        function evaluatePerformance(exerciseKey, gender, age, score) {
+            const exStd = STANDARDS[exerciseKey] || STANDARDS.situp;
+            const genderStd = exStd[gender] || exStd.Nam;
+            const [mucDat, mucTot] = genderStd[age] || [13, 19];
+            if (score >= mucTot) return "Tốt";
+            if (score >= mucDat) return "Đạt";
+            return "Chưa đạt";
+        }
+
+        function getStandardThresholds(exerciseKey, gender, age) {
+            const exStd = STANDARDS[exerciseKey] || STANDARDS.situp;
+            const genderStd = exStd[gender] || exStd.Nam;
+            return genderStd[age] || [13, 19];
+        }
+
+        // ============================================================================
+        // 2. CẤU HÌNH 3 BÀI TẬP & TRẠNG THÁI
+        // ============================================================================
+        const EXERCISE_CONFIGS = {
+            situp: {
+                id: 'situp', name: 'Nằm ngửa gập bụng (30s)', shortName: 'Gập bụng 30s', unit: 'lần',
+                angleDown: 130, angleUp: 65, totalTime: 30
+            },
+            pushup: {
+                id: 'pushup', name: 'Nằm sấp chống đẩy', shortName: 'Chống đẩy', unit: 'lần',
+                angleDown: 95, angleUp: 155, totalTime: 30
+            },
+            jump: {
+                id: 'jump', name: 'Bật xa tại chỗ (cm)', shortName: 'Bật xa tại chỗ', unit: 'cm',
+                angleDown: 120, angleUp: 165, totalTime: 15
+            }
+        };
+
+        let currentExercise = 'situp';
+        let counter = 0;
+        let stage = 'down';
+        let feedback = 'San sang';
+        let currentAngle = 0;
+        let progressBar = 0;
+
+        let totalTime = 30;
+        let remainingTime = 30;
+        let startTime = null;
+        let isRunning = false;
+        let isFinished = false;
+        let dataSaved = false;
+
+        let student = { name: 'Bồ Thiên Lộc', class: '10A5', gender: 'Nam', age: 16 };
+        let poseDirection = 'left-to-right';
+        let isPersonInFrame = false;
+
+        let currentFacingMode = 'environment';
+        let cameraMode = 'webcam';
+        let activeMediaStream = null;
+        let isRealCameraReady = false;
+
+        let jumpCalib = {
+            startLineX: 0.20,
+            refLineX: 0.82,
+            realDistCm: 250,
+            draggingMarker: null,
+            landingX: null,
+            liveFootCm: 0
+        };
+
+        let simTime = 0;
+        let simJumpAnim = { active: false, progress: 0, targetCm: 215 };
+        let latestPoseLandmarks = null;
+        let examRecords = [];
+        try {
+            const savedRec = localStorage.getItem('pe_ai_records');
+            if (savedRec) examRecords = JSON.parse(savedRec);
+        } catch (e) {}
+
+        // ============================================================================
+        // 3. ÂM THANH BEEP & TOÁN HỌC GÓC
+        // ============================================================================
+        let audioCtx = null;
+        function playBeep(freq = 800, durationMs = 100) {
+            if (!document.getElementById('sound-toggle')?.checked) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + durationMs / 1000);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + durationMs / 1000);
+            } catch (e) {}
+        }
+
+        function calculateAngle(a, b, c) {
+            const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
+            let angle = Math.abs(radians * 180.0 / Math.PI);
+            if (angle > 180.0) angle = 360.0 - angle;
+            return angle;
+        }
+
+        function interp(val, inMin, inMax, outMin, outMax) {
+            const clamped = Math.max(Math.min(val, Math.max(inMin, inMax)), Math.min(inMin, inMax));
+            return outMin + ((clamped - inMin) / (inMax - inMin)) * (outMax - outMin);
+        }
+
+        function xToJumpCm(normX) {
+            const span = jumpCalib.refLineX - jumpCalib.startLineX;
+            if (Math.abs(span) < 0.02) return 0;
+            return Math.max(0, Math.round(((normX - jumpCalib.startLineX) / span) * jumpCalib.realDistCm));
+        }
+
+        function jumpCmToX(cmVal) {
+            const span = jumpCalib.refLineX - jumpCalib.startLineX;
+            return jumpCalib.startLineX + (cmVal / jumpCalib.realDistCm) * span;
+        }
+
+        // ============================================================================
+        // 4. THUẬT TOÁN CHẤM ĐIỂM AI
+        // ============================================================================
+        function processExerciseBiomechanics(landmarks) {
+            if (!landmarks || landmarks.length < 33) {
+                isPersonInFrame = false;
+                return;
+            }
+
+            const visLeft = (landmarks[23]?.visibility || 0) + (landmarks[11]?.visibility || 0);
+            const visRight = (landmarks[24]?.visibility || 0) + (landmarks[12]?.visibility || 0);
+            const useLeft = visLeft >= visRight;
+
+            const shoulder = useLeft ? landmarks[11] : landmarks[12];
+            const elbow    = useLeft ? landmarks[13] : landmarks[14];
+            const wrist    = useLeft ? landmarks[15] : landmarks[16];
+            const hip      = useLeft ? landmarks[23] : landmarks[24];
+            const knee     = useLeft ? landmarks[25] : landmarks[26];
+            const ankle    = useLeft ? landmarks[27] : landmarks[28];
+            const leftHeel  = landmarks[29] || landmarks[27];
+            const rightHeel = landmarks[30] || landmarks[28];
+
+            if (currentExercise === 'situp') {
+                isPersonInFrame = (hip.x > 0.25 && hip.x < 0.75 && hip.y > 0.35 && hip.y < 0.85);
+            } else if (currentExercise === 'pushup') {
+                isPersonInFrame = (shoulder.x > 0.15 && shoulder.x < 0.85 && hip.y > 0.30 && ankle.y < 0.88);
+            } else {
+                isPersonInFrame = true;
+            }
+
+            const cfg = EXERCISE_CONFIGS[currentExercise];
+
+            if (currentExercise === 'situp') {
+                currentAngle = calculateAngle(shoulder, hip, knee);
+                progressBar = interp(currentAngle, cfg.angleUp, cfg.angleDown, 100, 0);
+
+                if (isRunning && !isFinished) {
+                    if (currentAngle > cfg.angleDown) {
+                        stage = 'down';
+                        feedback = 'Da nam sat san -> Gap len!';
+                    } else if (currentAngle < cfg.angleUp && stage === 'down') {
+                        stage = 'up';
+                        counter += 1;
+                        feedback = 'Hop le! +1 diem';
+                        playBeep(800, 100);
+                        updateLiveScoreUI();
+                    } else if (stage === 'down' && currentAngle < 95) {
+                        feedback = 'Chua dat do cao! Gap manh len';
+                    }
+                }
+            } else if (currentExercise === 'pushup') {
+                currentAngle = calculateAngle(shoulder, elbow, wrist);
+                const bodyAlignAngle = calculateAngle(shoulder, hip, ankle);
+                progressBar = interp(currentAngle, cfg.angleDown, cfg.angleUp, 100, 0);
+
+                if (isRunning && !isFinished) {
+                    if (bodyAlignAngle < 140) {
+                        feedback = 'Giu lung va hong thang!';
+                    } else if (currentAngle > cfg.angleUp) {
+                        if (stage === 'down') {
+                            stage = 'up';
+                            counter += 1;
+                            feedback = 'Hop le! +1 lan chong day';
+                            playBeep(800, 100);
+                            updateLiveScoreUI();
+                        } else {
+                            stage = 'up';
+                            feedback = 'Tay thang -> Ha nguc xuong!';
+                        }
+                    } else if (currentAngle <= cfg.angleDown && stage === 'up') {
+                        stage = 'down';
+                        feedback = 'Dat do sau! Day thang tay len!';
+                    }
+                }
+            } else if (currentExercise === 'jump') {
+                currentAngle = calculateAngle(hip, knee, ankle);
+                const dirSign = Math.sign(jumpCalib.refLineX - jumpCalib.startLineX) || 1;
+                const rearHeelX = dirSign > 0 ? Math.min(leftHeel.x, rightHeel.x) : Math.max(leftHeel.x, rightHeel.x);
+
+                const currentCm = xToJumpCm(rearHeelX);
+                jumpCalib.liveFootCm = currentCm;
+                progressBar = interp(currentCm, 0, jumpCalib.realDistCm, 0, 100);
+
+                if (!isRunning && !isFinished) {
+                    feedback = currentCm <= 20 ? 'Dung sat Vach 0cm -> Bam [Bat dau]' : `Vi tri chan: ${currentCm} cm`;
+                }
+
+                if (isRunning && !isFinished) {
+                    if (currentCm <= 22) {
+                        feedback = 'Giam nhay tu Vach Bat Dau (0cm)!';
+                    } else if (currentCm > 35 && currentCm > counter) {
+                        counter = currentCm;
+                        jumpCalib.landingX = rearHeelX;
+                        feedback = `Vi tri roi xuong: ${counter} cm!`;
+                        playBeep(950, 120);
+                        updateLiveScoreUI();
+                        updateJumpPanelLabels();
                     }
                 }
             }
         }
-    </script>
-    <style>
-        body {
-            background-color: #0b0f19;
-            color: #f1f5f9;
-            overflow-x: hidden;
-            overscroll-behavior-y: contain;
+
+        function updateJumpPanelLabels() {
+            const landLbl = document.getElementById('jump-landing-pos-label');
+            if (landLbl) {
+                landLbl.innerText = (jumpCalib.landingX !== null && counter > 0) ? `${counter} cm` : 'Chưa nhảy';
+            }
         }
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.90);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255
+
+        // ============================================================================
+        // 5. VẼ KHUNG ĐỊNH VỊ, THƯỚC ĐO BẬT XA & HUD TRÊN CANVAS
+        // ============================================================================
+        const canvasEl = document.getElementById('output-canvas');
+        const ctx = canvasEl.getContext('2d');
+
+        function drawPositioningGuideOverlay(w, h) {
+            if (!document.getElementById('guide-frame-toggle')?.checked) return;
+            if (currentExercise === 'jump') return;
+
+            ctx.save();
+            const isReadyColor = isPersonInFrame ? '#22c55e' : '#facc15';
+            const bgTint = isPersonInFrame ? 'rgba(34, 197, 94, 0.08)' : 'rgba(250, 204, 21, 0.06)';
+            const isLeftToRight = (poseDirection === 'left-to-right');
+
+            const boxX = w * 0.16;
+            const boxY = h * 0.28;
+            const boxW = w * 0.68;
+            const boxH = h * 0.46;
+
+            ctx.fillStyle = bgTint;
+            ctx.strokeStyle = isReadyColor;
+            ctx.lineWidth = 3;
+            ctx.setLineDash([12, 8]);
+            drawSafeRoundedRect(ctx, boxX, boxY, boxW, boxH, 16);
+            ctx.fill();
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+            ctx.strokeStyle = isReadyColor;
+            ctx.lineWidth = 2;
+            drawSafeRoundedRect(ctx, boxX + boxW / 2 - 220, boxY - 18, 440, 32, 8);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = isReadyColor;
+            ctx.font = 'bold 13px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(
+                isPersonInFrame
+                    ? '✅ VỊ TRÍ NGƯỜI TẬP ĐÃ KHỚP KHUNG - BẤM [BẮT ĐẦU] BÊN DƯỚI'
+                    : `🎯 ĐƯA CAMERA ĐỂ NGƯỜI TẬP NẰM VÀO KHUNG (${currentExercise === 'situp' ? 'GẬP BỤNG' : 'CHỐNG ĐẨY'})`,
+                boxX + boxW / 2,
+                boxY + 3
+            );
+            ctx.textAlign = 'left';
+
+            const floorY = h * 0.69;
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(boxX + 20, floorY);
+            ctx.lineTo(boxX + boxW - 20, floorY);
+            ctx.stroke();
+
+            const mapX = (normX) => isLeftToRight ? (normX * w) : ((1 - normX) * w);
+
+            if (currentExercise === 'situp') {
+                const headPt     = { x: mapX(0.24), y: h * 0.62 };
+                const shoulderPt = { x: mapX(0.31), y: h * 0.65 };
+                const hipPt      = { x: mapX(0.50), y: h * 0.67 };
+                const kneePt     = { x: mapX(0.66), y: h * 0.50 };
+                const footPt     = { x: mapX(0.77), y: h * 0.68 };
+
+                ctx.strokeStyle = 'rgba(250, 204, 21, 0.45)';
+                ctx.lineWidth = 14;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.beginPath();
+                ctx.moveTo(headPt.x, headPt.y);
+                ctx.lineTo(shoulderPt.x, shoulderPt.y);
+                ctx.lineTo(hipPt.x, hipPt.y);
+                ctx.lineTo(kneePt.x, kneePt.y);
+                ctx.lineTo(footPt.x, footPt.y);
+                ctx.stroke();
+
+                drawTargetZoneCircle(shoulderPt.x, shoulderPt.y, '1. VAI & ĐẦU', '#38bdf8');
+                drawTargetZoneCircle(hipPt.x, hipPt.y, '2. TÂM HÔNG', '#facc15');
+                drawTargetZoneCircle(kneePt.x, kneePt.y, '3. ĐẦU GỐI GẬP', '#4ade80');
+            } else if (currentExercise === 'pushup') {
+                const headPt     = { x: mapX(0.24), y: h * 0.42 };
+                const shoulderPt = { x: mapX(0.32), y: h * 0.46 };
+                const wristPt    = { x: mapX(0.31), y: h * 0.68 };
+                const hipPt      = { x: mapX(0.55), y: h * 0.56 };
+                const anklePt    = { x: mapX(0.77), y: h * 0.67 };
+
+                ctx.strokeStyle = 'rgba(250, 204, 21, 0.45)';
+                ctx.lineWidth = 14;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.beginPath();
+                ctx.moveTo(headPt.x, headPt.y);
+                ctx.lineTo(shoulderPt.x, shoulderPt.y);
+                ctx.lineTo(hipPt.x, hipPt.y);
+                ctx.lineTo(anklePt.x, anklePt.y);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(shoulderPt.x, shoulderPt.y);
+                ctx.lineTo(wristPt.x, wristPt.y);
+                ctx.stroke();
+
+                drawTargetZoneCircle(wristPt.x, wristPt.y, '1. TAY CHỐNG', '#38bdf8');
+                drawTargetZoneCircle(shoulderPt.x, shoulderPt.y, '2. VAI & LƯNG', '#facc15');
+                drawTargetZoneCircle(anklePt.x, anklePt.y, '3. MŨI CHÂN', '#4ade80');
+            }
+
+            ctx.restore();
+        }
+
+        function drawTargetZoneCircle(x, y, label, color) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+            ctx.fill();
+            ctx.lineWidth = 2.5;
+            ctx.strokeStyle = color;
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+            drawSafeRoundedRect(ctx, x - 65, y + 24, 130, 20, 6);
+            ctx.fill();
+
+            ctx.fillStyle = color;
+            ctx.font = 'bold 11px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, x, y + 38);
+            ctx.restore();
+        }
+
+        function drawStandingLongJumpRuler(w, h) {
+            if (currentExercise !== 'jump') return;
+
+            const startX = jumpCalib.startLineX * w;
+            const refX   = jumpCalib.refLineX * w;
+            const floorY = h * 0.69;
+
+            ctx.save();
+
+            const leftEdge = Math.min(startX, refX);
+            const rulerWidth = Math.abs(refX - startX);
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.22)';
+            ctx.fillRect(leftEdge, floorY - 16, rulerWidth, 40);
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.65)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(leftEdge, floorY - 16, rulerWidth, 40);
+
+            const stepCm = 25;
+            const numTicks = Math.floor(jumpCalib.realDistCm / stepCm);
+            for (let i = 0; i <= numTicks; i++) {
+                const cmVal = i * stepCm;
+                const ratio = cmVal / jumpCalib.realDistCm;
+                const tx = startX + ratio * (refX - startX);
+
+                const isMajor = (cmVal % 50 === 0);
+                ctx.strokeStyle = isMajor ? '#ffffff' : 'rgba(255,255,255,0.5)';
+                ctx.lineWidth = isMajor ? 2.5 : 1.5;
+                ctx.beginPath();
+                ctx.moveTo(tx, floorY - (isMajor ? 12 : 5));
+                ctx.lineTo(tx, floorY + (isMajor ? 16 : 9));
+                ctx.stroke();
+
+                ctx.fillStyle = isMajor ? '#ffffff' : '#cbd5e1';
+                ctx.font = isMajor ? 'bold 13px monospace' : '11px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${cmVal}`, tx, floorY + 35);
+            }
+
+            // Vạch Bắt Đầu (0 cm)
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(startX, floorY - 165);
+            ctx.lineTo(startX, floorY + 25);
+            ctx.stroke();
+
+            ctx.fillStyle = '#facc15';
+            drawSafeRoundedRect(ctx, startX - 95, floorY - 198, 190, 30, 8);
+            ctx.fill();
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('🚩 VỊ TRÍ BẮT ĐẦU (0cm)', startX, floorY - 178);
+
+            // Vạch Mốc Chuẩn
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(refX, floorY - 135);
+            ctx.lineTo(refX, floorY + 25);
+            ctx.stroke();
+
+            ctx.fillStyle = '#0284c7';
+            drawSafeRoundedRect(ctx, refX - 80, floorY - 165, 160, 28, 8);
+            ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`📏 MỐC (${jumpCalib.realDistCm}cm)`, refX, floorY - 147);
+
+            // Vạch Rơi Xuống (Tiếp đất)
+            if (jumpCalib.landingX !== null && counter > 0) {
+                const landPx = jumpCalib.landingX * w;
+
+                ctx.fillStyle = 'rgba(34, 197, 94, 0.30)';
+                ctx.fillRect(Math.min(startX, landPx), floorY - 14, Math.abs(landPx - startX), 36);
+
+                const midX = (startX + landPx) / 2;
+                ctx.strokeStyle = '#4ade80';
+                ctx.lineWidth = 3.5;
+                ctx.setLineDash([8, 6]);
+                ctx.beginPath();
+                ctx.moveTo(startX, floorY - 8);
+                ctx.quadraticCurveTo(midX, floorY - 145, landPx, floorY - 8);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.strokeStyle = '#22c55e';
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(landPx, floorY - 170);
+                ctx.lineTo(landPx, floorY + 25);
+                ctx.stroke();
+
+                ctx.fillStyle = '#16a34a';
+                drawSafeRoundedRect(ctx, landPx - 95, floorY - 202, 190, 32, 8);
+                ctx.fill();
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 13px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(`🎯 VỊ TRÍ RƠI: ${counter} CM`, landPx, floorY - 181);
+            }
+
+            ctx.textAlign = 'left';
+            ctx.restore();
+        }
+
+        function drawCustomSkeleton(landmarks, w, h) {
+            if (!landmarks) return;
+            const pairs = [[11, 13], [13, 15], [11, 23], [23, 25], [25, 27], [27, 29], [29, 31], [0, 11]];
+            ctx.save();
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = '#ec4899';
+            pairs.forEach(([i, j]) => {
+                const a = landmarks[i], b = landmarks[j];
+                if (a && b) {
+                    ctx.beginPath();
+                    ctx.moveTo(a.x * w, a.y * h);
+                    ctx.lineTo(b.x * w, b.y * h);
+                    ctx.stroke();
+                }
+            });
+
+            [0, 11, 13, 15, 23, 25, 27, 29].forEach(idx => {
+                const pt = landmarks[idx];
+                if (!pt) return;
+                ctx.beginPath();
+                ctx.arc(pt.x * w, pt.y * h, 7, 0, Math.PI * 2);
+                ctx.fillStyle = '#f97316';
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+            });
+            ctx.restore();
+        }
+
+        function drawOpenCVHudOverlay(w, h) {
+            ctx.save();
+
+            // Bảng Điểm & Thời gian
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.90)';
+            ctx.strokeStyle = '#00c8ff';
+            ctx.lineWidth = 2.5;
+            drawSafeRoundedRect(ctx, 16, 14, 520, 132, 12);
+            ctx.fill();
+            ctx.stroke();
+
+            const genderLabel = student.gender === 'Nam' ? 'Nam' : 'Nữ';
+            ctx.fillStyle = '#00ffff';
+            ctx.font = 'bold 16px sans-serif';
+            ctx.fillText(`TS: ${student.name} | Lớp: ${student.class} | ${genderLabel} - ${student.age}t`, 30, 40);
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = 'bold 14px sans-serif';
+            ctx.fillText(currentExercise === 'jump' ? 'BẬT XA (CM)' : 'ĐIỂM SỐ', 30, 68);
+
+            ctx.fillStyle = '#00ff44';
+            ctx.font = 'bold 46px monospace';
+            ctx.fillText(String(counter), 30, 114);
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = 'bold 14px sans-serif';
+            ctx.fillText('THỜI GIAN', 220, 68);
+
+            ctx.fillStyle = remainingTime <= 5 ? '#ff3333' : '#ffff00';
+            ctx.font = 'bold 44px monospace';
+            ctx.fillText(`${remainingTime}s`, 220, 114);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 13px sans-serif';
+            ctx.fillText(`Góc: ${Math.round(currentAngle)}° | ${feedback}`, 30, 138);
+
+            // Thanh tiến trình bên phải
+            const barTop = 180, barBottom = 450, barHeight = barBottom - barTop;
+            const fillH = Math.max(0, Math.min(100, progressBar)) / 100 * barHeight;
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
+            ctx.fillRect(w - 54, barTop, 26, barHeight);
+            ctx.fillStyle = '#00ff44';
+            ctx.fillRect(w - 54, barBottom - fillH, 26, fillH);
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(w - 54, barTop, 26, barHeight);
+
+            if (isFinished) {
+                const evalResult = evaluatePerformance(currentExercise, student.gender, student.age, counter);
+                const unitLabel = EXERCISE_CONFIGS[currentExercise].unit.toUpperCase();
+
+                ctx.fillStyle = 'rgba(10, 14, 23, 0.95)';
+                ctx.strokeStyle = '#22c55e';
+                ctx.lineWidth = 3.5;
+                drawSafeRoundedRect(ctx, w / 2 - 310, h / 2 - 95, 620, 175, 16);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#facc15';
+                ctx.font = 'bold 26px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(`HOÀN THÀNH BÀI THI (${totalTime}s)!`, w / 2, h / 2 - 42);
+
+                ctx.fillStyle = '#00ff44';
+                ctx.font = 'bold 30px sans-serif';
+                ctx.fillText(`KẾT QUẢ: ${counter} ${unitLabel} - XẾP LOẠI: ${evalResult.toUpperCase()}`, w / 2, h / 2 + 6);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 15px sans-serif';
+                ctx.fillText("Bấm nút [Đổi TS] hoặc [Thi lại] ngay thanh bên dưới màn hình", w / 2, h / 2 + 50);
+                ctx.textAlign = 'left';
+            }
+
+            ctx.restore();
+        }
+
+        // ============================================================================
+        // 6. BỘ MÔ PHỎNG TƯ THẾ AI (LUÔN CHẠY KHI CHƯA CÓ CAMERA ĐỂ TRÁNH MÀN HÌNH ĐEN)
+        // ============================================================================
+        function generateSimulatedLandmarks() {
+            const lm = Array.from({ length: 33 }, () => ({ x: 0.5, y: 0.5, z: 0, visibility: 0.99 }));
+            const autoCycle = document.getElementById('sim-auto-cycle')?.checked;
+            const sliderEl = document.getElementById('sim-angle-slider');
+            const isLeftToRight = (poseDirection === 'left-to-right');
+            const mapNormX = (nx) => isLeftToRight ? nx : (1 - nx);
+
+            if (currentExercise === 'situp') {
+                let targetAngle = parseFloat(sliderEl?.value || 145);
+                if (autoCycle && isRunning && !isFinished) {
+                    simTime += 0.065;
+                    targetAngle = 100 + 48 * Math.cos(simTime);
+                    if (sliderEl) sliderEl.value = Math.round(targetAngle);
+                    const valEl = document.getElementById('sim-slider-val');
+                    if (valEl) valEl.innerText = Math.round(targetAngle) + '°';
+                }
+                const hip = { x: mapNormX(0.50), y: 0.67 };
+                const knee = { x: mapNormX(0.66), y: 0.50 };
+                const ankle = { x: mapNormX(0.77), y: 0.68 };
+                const kneeAngleRad = Math.atan2(knee.y - hip.y, knee.x - hip.x);
+                const dirFactor = isLeftToRight ? -1 : 1;
+                const shoulderAngleRad = kneeAngleRad + dirFactor * (targetAngle * Math.PI / 180);
+                const shoulder = { x: hip.x + 0.22 * Math.cos(shoulderAngleRad), y: hip.y + 0.22 * Math.sin(shoulderAngleRad) };
+                const head = { x: shoulder.x + 0.07 * Math.cos(shoulderAngleRad), y: shoulder.y + 0.07 * Math.sin(shoulderAngleRad) };
+
+                lm[0] = head; lm[11] = lm[12] = shoulder; lm[13] = lm[14] = { x: shoulder.x, y: shoulder.y - 0.05, visibility: 0.99 };
+                lm[15] = lm[16] = head; lm[23] = lm[24] = hip; lm[25] = lm[26] = knee; lm[27] = lm[28] = lm[29] = lm[30] = ankle;
+            } else if (currentExercise === 'pushup') {
+                let targetElbowAngle = parseFloat(sliderEl?.value || 155);
+                if (autoCycle && isRunning && !isFinished) {
+                    simTime += 0.07;
+                    targetElbowAngle = 125 + 42 * Math.cos(simTime);
+                    if (sliderEl) sliderEl.value = Math.round(targetElbowAngle);
+                    const valEl = document.getElementById('sim-slider-val');
+                    if (valEl) valEl.innerText = Math.round(targetElbowAngle) + '°';
+                }
+                const dropFactor = interp(targetElbowAngle, 80, 170, 0.14, 0.0);
+                const wrist = { x: mapNormX(0.31), y: 0.68 };
+                const ankle = { x: mapNormX(0.77), y: 0.67 };
+                const shoulder = { x: mapNormX(0.32), y: 0.46 + dropFactor };
+                const elbow = { x: mapNormX(0.27), y: 0.57 + dropFactor * 0.5 };
+                const hip = { x: mapNormX(0.55), y: 0.56 + dropFactor * 0.6 };
+                const knee = { x: mapNormX(0.67), y: 0.62 + dropFactor * 0.3 };
+                const head = { x: mapNormX(0.24), y: shoulder.y - 0.03 };
+
+                lm[0] = head; lm[11] = lm[12] = shoulder; lm[13] = lm[14] = elbow;
+                lm[15] = lm[16] = wrist; lm[23] = lm[24] = hip; lm[25] = lm[26] = knee; lm[27] = lm[28] = lm[29] = lm[30] = ankle;
+            } else if (currentExercise === 'jump') {
+                const pixelSpan = jumpCalib.refLineX - jumpCalib.startLineX;
+                let jumperX = jumpCalib.startLineX;
+                let jumperYOffset = 0;
+
+                if (simJumpAnim.active) {
+                    simJumpAnim.progress += 0.025;
+                    if (simJumpAnim.progress >= 1) { simJumpAnim.progress = 1; simJumpAnim.active = false; }
+                    const p = simJumpAnim.progress;
+                    jumperX = jumpCalib.startLineX + ((simJumpAnim.targetCm / jumpCalib.realDistCm) * pixelSpan) * p;
+                    jumperYOffset = -0.22 * Math.sin(p * Math.PI);
+                } else if (jumpCalib.landingX !== null && counter > 0) {
+                    jumperX = jumpCalib.landingX;
+                }
+
+                const heel = { x: jumperX, y: 0.68 + jumperYOffset };
+                const knee = { x: jumperX + 0.03, y: 0.54 + jumperYOffset };
+                const hip = { x: jumperX - 0.01, y: 0.42 + jumperYOffset };
+                const shoulder = { x: jumperX + 0.02, y: 0.27 + jumperYOffset };
+                const head = { x: jumperX + 0.03, y: 0.19 + jumperYOffset };
+
+                lm[0] = head; lm[11] = lm[12] = shoulder; lm[13] = lm[14] = shoulder; lm[15] = lm[16] = shoulder;
+                lm[23] = lm[24] = hip; lm[25] = lm[26] = knee; lm[27] = lm[28] = lm[29] = lm[30] = heel;
+            }
+            return lm;
+        }
+
+        function triggerSimJump() {
+            if (!isRunning) startExam();
+            simJumpAnim = { active: true, progress: 0, targetCm: parseInt(document.getElementById('sim-jump-slider')?.value) || 215 };
+        }
+
+        function onManualSimSlider() {
+            const autoEl = document.getElementById('sim-auto-cycle');
+            if (autoEl) autoEl.checked = false;
+            const valEl = document.getElementById('sim-slider-val');
+            if (valEl) valEl.innerText = document.getElementById('sim-angle-slider').value + '°';
+        }
+
+        // ============================================================================
+        // 7. VÒNG LẶP RENDER CHÍNH (BỌC TRY-CATCH ĐẢM BẢO KHÔNG BAO GIỜ ĐỨNG HÌNH ĐEN)
+        // ============================================================================
+        let mpPoseInstance = null;
+        let isProcessingMp = false;
+        const videoEl = document.getElementById('input-video');
+        const ipImgEl = document.getElementById('ip-stream-img');
+
+        function initMediaPipePose() {
+            try {
+                if (typeof Pose !== 'undefined') {
+                    mpPoseInstance = new Pose({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}` });
+                    mpPoseInstance.setOptions({ modelComplexity: 1, smoothLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+                    mpPoseInstance.onResults((results) => {
+                        latestPoseLandmarks = results?.poseLandmarks || null;
+                        isProcessingMp = false;
+                    });
+                }
+            } catch (e) {
+                console.warn('MediaPipe Pose fallback:', e);
+            }
+        }
+
+        async function mainRenderLoop() {
+            try {
+                const w = canvasEl.width;
+                const h = canvasEl.height;
+
+                if (isRunning && !isFinished) {
+                    const elapsed = (Date.now() - startTime) / 1000;
+                    remainingTime = Math.max(0, Math.ceil(totalTime - elapsed));
+                    if (remainingTime === 0) finishExamSession();
+                }
+
+                // 1. Luôn vẽ nền sân tập sáng rõ trước tiên
+                const grad = ctx.createLinearGradient(0, 0, 0, h);
+                grad.addColorStop(0, '#0f172a');
+                grad.addColorStop(0.70, '#1e293b');
+                grad.addColorStop(0.71, '#0f172a');
+                grad.addColorStop(1, '#020617');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+
+                // 2. Kiểm tra nếu Camera thực tế đã sẵn sàng thì vẽ hình Camera lên
+                const sourceMedia = cameraMode === 'ip' ? ipImgEl : videoEl;
+                isRealCameraReady = (cameraMode !== 'sim') && (
+                    cameraMode === 'ip'
+                        ? (ipImgEl.complete && ipImgEl.naturalWidth > 0)
+                        : (videoEl.readyState >= 2 && videoEl.videoWidth > 0)
+                );
+
+                if (isRealCameraReady) {
+                    ctx.save();
+                    if (document.getElementById('mirror-toggle')?.checked) {
+                        ctx.translate(w, 0);
+                        ctx.scale(-1, 1);
+                    }
+                    ctx.drawImage(sourceMedia, 0, 0, w, h);
+                    ctx.restore();
+
+                    // Gửi trực tiếp videoEl (KHÔNG gửi canvasEl) vào MediaPipe để tránh treo màn hình
+                    if (mpPoseInstance && !isProcessingMp) {
+                        isProcessingMp = true;
+                        mpPoseInstance.send({ image: sourceMedia }).catch(() => { isProcessingMp = false; });
+                    }
+                } else {
+                    // Khi chưa có Camera thật hoặc đang ở chế độ Mô phỏng: Hiển thị người mẫu AI để thao tác ngay!
+                    latestPoseLandmarks = generateSimulatedLandmarks();
+                }
+
+                // 3. Chấm điểm & Vẽ Khung định vị + Thước đo Bật xa + Khung xương + HUD
+                if (latestPoseLandmarks) {
+                    processExerciseBiomechanics(latestPoseLandmarks);
+                }
+                drawPositioningGuideOverlay(w, h);
+                drawStandingLongJumpRuler(w, h);
+                if (latestPoseLandmarks) {
+                    drawCustomSkeleton(latestPoseLandmarks, w, h);
+                }
+                drawOpenCVHudOverlay(w, h);
+
+            } catch (renderErr) {
+                console.error('Render error recovered:', renderErr);
+            }
+
+            requestAnimationFrame(mainRenderLoop);
+        }
+
+        // ============================================================================
+        // 8. QUẢN LÝ BẬT CAMERA AN TOÀN
+        // ============================================================================
+        function stopCurrentVideoStream() {
+            if (activeMediaStream) {
+                activeMediaStream.getTracks().forEach(t => t.stop());
+                activeMediaStream = null;
+            }
+            if (videoEl.srcObject) {
+                videoEl.srcObject.getTracks().forEach(t => t.stop());
+                videoEl.srcObject = null;
+            }
+            videoEl.pause();
+            ipImgEl.src = '';
+            isRealCameraReady = false;
+        }
+
+        async function startCameraStream(facingMode = 'environment') {
+            currentFacingMode = facingMode;
+            cameraMode = 'webcam';
+            document.getElementById('camera-select').value = 'webcam';
+            document.getElementById('ip-cam-wrap').classList.add('hidden');
+            document.getElementById('file-upload-wrap').classList.add('hidden');
+
+            document.getElementById('mirror-toggle').checked = (facingMode === 'user');
+            updateCameraButtonHighlight(facingMode);
+            stopCurrentVideoStream();
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                setAiStatus('Mô phỏng AI (Cần HTTPS cho Cam)');
+                showToast('Trình duyệt chặn Camera do chưa có HTTPS. Đang hiển thị Chế độ Mô phỏng để bạn sử dụng!', 'warning');
+                return;
+            }
+
+            setAiStatus('Đang mở Camera...');
+
+            try {
+                let stream = null;
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        audio: false,
+                        video: { facingMode: { ideal: facingMode }, width: { ideal: 1280 }, height: { ideal: 720 } }
+                    });
+                } catch (e1) {
+                    stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+                }
+
+                activeMediaStream = stream;
+                videoEl.srcObject = stream;
+                videoEl.setAttribute('playsinline', 'true');
+                videoEl.muted = true;
+                await videoEl.play();
+
+                document.getElementById('sim-control-overlay').classList.add('hidden');
+                setAiStatus(facingMode === 'environment' ? 'Cam Sau / Webcam' : 'Cam Trước');
+                showToast('Đã kết nối Camera trực tiếp!', 'success');
+                await populateWebcamDevices();
+            } catch (err) {
+                document.getElementById('sim-control-overlay').classList.remove('hidden');
+                setAiStatus('Đang chạy Mô phỏng AI');
+                showToast('Chưa cấp quyền Camera -> Đang chạy sẵn Chế độ Mô phỏng AI!', 'info');
+            }
+        }
+
+        function flipMobileCamera() {
+            startCameraStream(currentFacingMode === 'environment' ? 'user' : 'environment');
+        }
+
+        async function handleCameraSourceChange() {
+            cameraMode = document.getElementById('camera-select').value;
+            document.getElementById('ip-cam-wrap').classList.add('hidden');
+            document.getElementById('file-upload-wrap').classList.add('hidden');
+            stopCurrentVideoStream();
+
+            if (cameraMode === 'sim') {
+                document.getElementById('sim-control-overlay').classList.remove('hidden');
+                setAiStatus('Chế độ Mô phỏng AI');
+            } else if (cameraMode === 'webcam') {
+                await startCameraStream(currentFacingMode);
+            } else if (cameraMode === 'ip') {
+                document.getElementById('ip-cam-wrap').classList.remove('hidden');
+                document.getElementById('ip-cam-wrap').classList.add('flex');
+                setAiStatus('DroidCam IP');
+            } else if (cameraMode === 'file') {
+                document.getElementById('file-upload-wrap').classList.remove('hidden');
+                document.getElementById('file-upload-wrap').classList.add('flex');
+                setAiStatus('Video File');
+            }
+        }
+
+        function updateCameraButtonHighlight(mode) {
+            const btnRear = document.getElementById('btn-cam-rear');
+            const btnFront = document.getElementById('btn-cam-front');
+            btnRear.classList.remove('cam-btn-active');
+            btnFront.classList.remove('cam-btn-active');
+            if (mode === 'environment') btnRear.classList.add('cam-btn-active');
+            if (mode === 'user') btnFront.classList.add('cam-btn-active');
+        }
+
+        async function populateWebcamDevices() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(d => d.kind === 'videoinput');
+                const selectEl = document.getElementById('webcam-device-list');
+                selectEl.innerHTML = '';
+                videoDevices.forEach((d, idx) => {
+                    const opt = document.createElement('option');
+                    opt.value = d.deviceId;
+                    opt.text = d.label || `Camera #${idx + 1}`;
+                    selectEl.appendChild(opt);
+                });
+            } catch (e) {}
+        }
+
+        async function startWebcamByDeviceId() {
+            const deviceId = document.getElementById('webcam-device-list').value;
+            if (!deviceId) return;
+            try {
+                stopCurrentVideoStream();
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: false,
+                    video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }
+                });
+                activeMediaStream = stream;
+                videoEl.srcObject = stream;
+                await videoEl.play();
+                document.getElementById('sim-control-overlay').classList.add('hidden');
+            } catch (e) {}
+        }
+
+        function connectIpCamera() {
+            let ipInput = document.getElementById('ip-cam-input').value.trim();
+            if (!ipInput) return;
+            if (!ipInput.startsWith('http')) ipInput = ipInput.includes(':4747') ? `http://${ipInput}/video` : `http://${ipInput}:4747/video`;
+            ipImgEl.src = ipInput;
+        }
+
+        function loadVideoFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            stopCurrentVideoStream();
+            videoEl.src = URL.createObjectURL(file);
+            videoEl.play();
+            document.getElementById('sim-control-overlay').classList.add('hidden');
+        }
+
+        function setAiStatus(text) {
+            const el = document.getElementById('ai-status-text');
+            if (el) el.innerText = text;
+        }
+
+        function togglePoseDirection() {
+            poseDirection = (poseDirection === 'left-to-right') ? 'right-to-left' : 'left-to-right';
+            document.getElementById('pose-dir-label').innerText = poseDirection === 'left-to-right' ? 'Trái➔Phải' : 'Phải➔Trái';
+            jumpCalib.startLineX = 1 - jumpCalib.startLineX;
+            jumpCalib.refLineX = 1 - jumpCalib.refLineX;
+            if (jumpCalib.landingX !== null) jumpCalib.landingX = 1 - jumpCalib.landingX;
+            updateJumpPanelLabels();
+        }
+
+        // ============================================================================
+        // 9. ĐIỀU KHIỂN BÀI THI & BẬT XA TẠI CHỖ
+        // ============================================================================
+        function switchExercise(exKey) {
+            currentExercise = exKey;
+            document.querySelectorAll('.exercise-tab').forEach(btn => btn.classList.remove('active-tab'));
+            document.getElementById(`tab-${exKey}`).classList.add('active-tab');
+
+            const cfg = EXERCISE_CONFIGS[exKey];
+            document.getElementById('current-exercise-badge').innerText = cfg.shortName;
+            document.getElementById('input-thresh-down').value = cfg.angleDown;
+            document.getElementById('input-thresh-up').value = cfg.angleUp;
+            document.getElementById('input-total-time').value = cfg.totalTime;
+
+            const jumpDock = document.getElementById('onscreen-jump-dock');
+            if (exKey === 'jump') {
+                document.getElementById('metric-title-label').innerText = 'THÀNH TÍCH BẬT XA';
+                document.getElementById('metric-unit-label').innerText = 'centimet (cm)';
+                document.getElementById('jump-calibration-panel').classList.remove('hidden');
+                document.getElementById('sim-jump-controls').classList.remove('hidden');
+                document.getElementById('sim-angle-controls').classList.add('hidden');
+                jumpDock.classList.remove('hidden');
+                jumpDock.classList.add('flex');
+            } else {
+                document.getElementById('metric-title-label').innerText = 'SỐ LẦN HỢP LỆ';
+                document.getElementById('metric-unit-label').innerText = `lần / ${cfg.totalTime} giây`;
+                document.getElementById('jump-calibration-panel').classList.add('hidden');
+                document.getElementById('sim-jump-controls').classList.add('hidden');
+                document.getElementById('sim-angle-controls').classList.remove('hidden');
+                jumpDock.classList.add('hidden');
+                jumpDock.classList.remove('flex');
+            }
+
+            resetExam();
+        }
+
+        function lockCurrentFootAsTakeoff() {
+            if (latestPoseLandmarks && latestPoseLandmarks.length >= 33) {
+                const footPt = latestPoseLandmarks[31] || latestPoseLandmarks[27];
+                if (footPt && footPt.x > 0.05 && footPt.x < 0.90) {
+                    jumpCalib.startLineX = footPt.x;
+                    updateJumpPanelLabels();
+                    showToast('Đã đặt Vạch Bắt Đầu (0cm) tại mũi chân HS!', 'success');
+                    return;
+                }
+            }
+            showToast('Kéo trực tiếp Vạch Vàng (0cm) trên màn hình!', 'info');
+        }
+
+        function clearLandingMarker() {
+            jumpCalib.landingX = null;
+            counter = 0;
+            updateLiveScoreUI();
+            updateJumpPanelLabels();
+            showToast('Đã xóa vạch rơi xuống!', 'info');
+        }
+
+        function updateJumpCalibration() {
+            jumpCalib.realDistCm = parseInt(document.getElementById('calib-distance-cm').value) || 250;
+            if (jumpCalib.landingX !== null) {
+                counter = xToJumpCm(jumpCalib.landingX);
+                updateLiveScoreUI();
+                updateJumpPanelLabels();
+            }
+        }
+
+        function applyManualJumpScore() {
+            const val = parseInt(document.getElementById('manual-jump-cm').value);
+            if (!isNaN(val) && val >= 0) {
+                counter = val;
+                jumpCalib.landingX = jumpCmToX(val);
+                updateLiveScoreUI();
+                updateJumpPanelLabels();
+                showToast(`Đã ghi thành tích bật xa: ${val} cm`, 'success');
+            }
+        }
+
+        function handlePointerDown(clientX, clientY) {
+            if (currentExercise !== 'jump') return;
+            const rect = canvasEl.getBoundingClientRect();
+            const normY = (clientY - rect.top) / rect.height;
+            if (normY > 0.82) return;
+
+            const normX = (clientX - rect.left) / rect.width;
+            if (jumpCalib.landingX !== null && Math.abs(normX - jumpCalib.landingX) < 0.04) {
+                jumpCalib.draggingMarker = 'landing';
+            } else if (Math.abs(normX - jumpCalib.startLineX) < 0.045) {
+                jumpCalib.draggingMarker = 'start';
+            } else if (Math.abs(normX - jumpCalib.refLineX) < 0.045) {
+                jumpCalib.draggingMarker = 'ref';
+            }
+        }
+
+        function handlePointerMove(clientX) {
+            if (!jumpCalib.draggingMarker) return;
+            const rect = canvasEl.getBoundingClientRect();
+            const normX = Math.max(0.05, Math.min(0.95, (clientX - rect.left) / rect.width));
+
+            if (jumpCalib.draggingMarker === 'start') {
+                jumpCalib.startLineX = normX;
+                if (jumpCalib.landingX !== null) counter = xToJumpCm(jumpCalib.landingX);
+            } else if (jumpCalib.draggingMarker === 'ref') {
+                jumpCalib.refLineX = normX;
+                if (jumpCalib.landingX !== null) counter = xToJumpCm(jumpCalib.landingX);
+            } else if (jumpCalib.draggingMarker === 'landing') {
+                jumpCalib.landingX = normX;
+                counter = xToJumpCm(normX);
+            }
+            updateLiveScoreUI();
+            updateJumpPanelLabels();
+        }
+
+        canvasEl.addEventListener('mousedown', (e) => handlePointerDown(e.clientX, e.clientY));
+        window.addEventListener('mousemove', (e) => handlePointerMove(e.clientX));
+        window.addEventListener('mouseup', () => { jumpCalib.draggingMarker = null; });
+
+        canvasEl.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) handlePointerDown(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+        window.addEventListener('touchmove', (e) => {
+            if (jumpCalib.draggingMarker && e.touches.length > 0) handlePointerMove(e.touches[0].clientX);
+        }, { passive: true });
+        window.addEventListener('touchend', () => { jumpCalib.draggingMarker = null; });
+
+        function startExam() {
+            counter = 0;
+            jumpCalib.landingX = null;
+            totalTime = parseInt(document.getElementById('input-total-time').value) || 30;
+            remainingTime = totalTime;
+            startTime = Date.now();
+            isRunning = true;
+            isFinished = false;
+            dataSaved = false;
+            stage = currentExercise === 'pushup' ? 'up' : 'down';
+            feedback = 'Bat dau! Thuc hien dong tac...';
+
+            playBeep(900, 180);
+            updateLiveScoreUI();
+            updateJumpPanelLabels();
+            document.getElementById('btn-start-text').innerText = `Đang chấm (${totalTime}s)...`;
+        }
+
+        function finishExamSession() {
+            isFinished = true;
+            isRunning = false;
+            playBeep(1200, 700);
+            document.getElementById('btn-start-text').innerText = `Bắt đầu ${totalTime}s [S]`;
+            if (!dataSaved) {
+                saveRecordToTable(student, currentExercise, counter);
+                dataSaved = true;
+            }
+        }
+
+        function resetExam() {
+            counter = 0;
+            jumpCalib.landingX = null;
+            totalTime = parseInt(document.getElementById('input-total-time').value) || EXERCISE_CONFIGS[currentExercise].totalTime;
+            remainingTime = totalTime;
+            isRunning = false;
+            isFinished = false;
+            dataSaved = false;
+            stage = currentExercise === 'pushup' ? 'up' : 'down';
+            feedback = 'San sang';
+            document.getElementById('btn-start-text').innerText = `Bắt đầu ${totalTime}s [S]`;
+            updateLiveScoreUI();
+            updateJumpPanelLabels();
+        }
+
+        function nextStudent() {
+            resetExam();
+            const newName = prompt("Nhập Họ và Tên học sinh tiếp theo:", student.name);
+            if (newName && newName.trim()) {
+                document.getElementById('student-name').value = newName.trim();
+                syncStudentInfo();
+                showToast(`Đã chuyển sang thí sinh: ${student.name}`, 'info');
+            }
+        }
+
+        function manualSaveResult() {
+            saveRecordToTable(student, currentExercise, counter);
+            dataSaved = true;
+        }
+
+        function syncStudentInfo() {
+            student.name = document.getElementById('student-name').value.trim() || 'Học sinh';
+            student.class = document.getElementById('student-class').value.trim() || '10A5';
+            student.gender = document.getElementById('student-gender').value;
+            student.age = parseInt(document.getElementById('student-age').value) || 16;
+            updateLiveScoreUI();
+        }
+
+        function selectFromRoster() {
+            const val = document.getElementById('quick-roster-select').value;
+            if (!val) return;
+            const [name, cls, gender, age] = val.split('|');
+            document.getElementById('student-name').value = name;
+            document.getElementById('student-class').value = cls;
+            document.getElementById('student-gender').value = gender;
+            document.getElementById('student-age').value = age;
+            syncStudentInfo();
+            resetExam();
+        }
+
+        function updateLiveScoreUI() {
+            document.getElementById('live-score-display').innerText = counter;
+            const evaluation = evaluatePerformance(currentExercise, student.gender, student.age, counter);
+            const [mucDat, mucTot] = getStandardThresholds(currentExercise, student.gender, student.age);
+            const unit = EXERCISE_CONFIGS[currentExercise].unit;
+            document.getElementById('live-target-hint').innerText = `Đạt: ≥ ${mucDat} ${unit} | Tốt: ≥ ${mucTot} ${unit}`;
+
+            const badge = document.getElementById('live-eval-badge');
+            badge.innerText = evaluation;
+            if (evaluation === 'Tốt') badge.className = 'mt-1 px-3 py-1 rounded-lg text-sm font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+            else if (evaluation === 'Đạt') badge.className = 'mt-1 px-3 py-1 rounded-lg text-sm font-extrabold bg-sky-500/20 text-sky-400 border border-sky-500/40';
+            else badge.className = 'mt-1 px-3 py-1 rounded-lg text-sm font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/40';
+        }
+
+        function updateExerciseThresholds() {
+            const cfg = EXERCISE_CONFIGS[currentExercise];
+            cfg.angleDown = parseFloat(document.getElementById('input-thresh-down').value) || cfg.angleDown;
+            cfg.angleUp = parseFloat(document.getElementById('input-thresh-up').value) || cfg.angleUp;
+            cfg.totalTime = parseInt(document.getElementById('input-total-time').value) || 30;
+            if (!isRunning) {
+                totalTime = cfg.totalTime;
+                remainingTime = totalTime;
+                document.getElementById('btn-start-text').innerText = `Bắt đầu ${totalTime}s [S]`;
+            }
+        }
+
+        function resetThresholdsToDefault() {
+            EXERCISE_CONFIGS.situp.angleDown = 130; EXERCISE_CONFIGS.situp.angleUp = 65; EXERCISE_CONFIGS.situp.totalTime = 30;
+            EXERCISE_CONFIGS.pushup.angleDown = 95; EXERCISE_CONFIGS.pushup.angleUp = 155; EXERCISE_CONFIGS.pushup.totalTime = 30;
+            EXERCISE_CONFIGS.jump.angleDown = 120; EXERCISE_CONFIGS.jump.angleUp = 165; EXERCISE_CONFIGS.jump.totalTime = 15;
+            switchExercise(currentExercise);
+        }
+
+        // ============================================================================
+        // 10. LƯU BẢNG & XUẤT EXCEL
+        // ============================================================================
+        function formatNowStr() {
+            const now = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        }
+
+        function saveRecordToTable(studentInfo, exerciseKey, scoreVal) {
+            const evaluation = evaluatePerformance(exerciseKey, studentInfo.gender, studentInfo.age, scoreVal);
+            const record = {
+                id: Date.now() + Math.random(),
+                name: studentInfo.name,
+                class: studentInfo.class,
+                gender: studentInfo.gender,
+                age: studentInfo.age,
+                exerciseKey,
+                exerciseName: EXERCISE_CONFIGS[exerciseKey].name,
+                unit: EXERCISE_CONFIGS[exerciseKey].unit,
+                score: scoreVal,
+                timestamp: formatNowStr(),
+                evaluation
+            };
+            examRecords.unshift(record);
+            try { localStorage.setItem('pe_ai_records', JSON.stringify(examRecords)); } catch (e) {}
+            renderRecordsTable();
+            showToast(`Đã lưu: ${record.name} - ${record.score} ${record.unit} (${record.evaluation})`, 'success');
+        }
+
+        function renderRecordsTable() {
+            const filterEx = document.getElementById('filter-exercise').value;
+            const filtered = filterEx === 'ALL' ? examRecords : examRecords.filter(r => r.exerciseKey === filterEx);
+            const tbody = document.getElementById('records-tbody');
+
+            document.getElementById('export-count-badge').innerText = examRecords.length;
+            document.getElementById('stat-total-count').innerText = examRecords.length;
+            document.getElementById('stat-good-count').innerText = examRecords.filter(r => r.evaluation === 'Tốt').length;
+            document.getElementById('stat-pass-count').innerText = examRecords.filter(r => r.evaluation === 'Đạt').length;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="py-6 text-center text-slate-400 text-xs">Chưa có dữ liệu. Bấm [Bắt đầu] ngay dưới màn hình Camera để đo.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((r, idx) => {
+                let badgeClass = 'bg-rose-500/20 text-rose-400 border-rose-500/30';
+                if (r.evaluation === 'Tốt') badgeClass = 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+                else if (r.evaluation === 'Đạt') badgeClass = 'bg-sky-500/20 text-sky-400 border-sky-500/30';
+
+                return `
+                    <tr class="hover:bg-slate-800/50">
+                        <td class="py-2 px-3 text-center font-mono text-xs text-slate-400">${idx + 1}</td>
+                        <td class="py-2 px-3 font-semibold text-white">${r.name}</td>
+                        <td class="py-2 px-3 text-center text-slate-300">${r.class}</td>
+                        <td class="py-2 px-3 text-center text-slate-300">${r.gender === 'Nam' ? 'Nam' : 'Nữ'}</td>
+                        <td class="py-2 px-3 text-center text-slate-300">${r.age}</td>
+                        <td class="py-2 px-3 text-sky-400 font-medium">${r.exerciseName}</td>
+                        <td class="py-2 px-3 text-center font-mono font-bold text-emerald-400">${r.score} ${r.unit}</td>
+                        <td class="py-2 px-3 text-center font-mono text-xs text-slate-400">${r.timestamp}</td>
+                        <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded-full text-xs font-bold border ${badgeClass}">${r.evaluation}</span></td>
+                        <td class="py-2 px-3 text-center"><button onclick="deleteRecord('${r.id}')" class="text-slate-400 hover:text-rose-400 cursor-pointer">🗑</button></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function deleteRecord(id) {
+            examRecords = examRecords.filter(r => String(r.id) !== String(id));
+            try { localStorage.setItem('pe_ai_records', JSON.stringify(examRecords)); } catch (e) {}
+            renderRecordsTable();
+        }
+
+        function clearAllRecords() {
+            examRecords = [];
+            try { localStorage.setItem('pe_ai_records', JSON.stringify(examRecords)); } catch (e) {}
+            renderRecordsTable();
+        }
+
+        function addSampleRecords() {
+            [
+                { name: 'Bồ Thiên Lộc', class: '10A5', gender: 'Nam', age: 16, ex: 'situp', score: 21 },
+                { name: 'Nguyễn Ngọc Bảo Trân', class: '10A5', gender: 'Nu', age: 15, ex: 'situp', score: 15 },
+                { name: 'Trần Minh Hiếu', class: '11B2', gender: 'Nam', age: 16, ex: 'pushup', score: 25 },
+                { name: 'Lê Thị Thanh Tâm', class: '12C1', gender: 'Nu', age: 17, ex: 'jump', score: 178 }
+            ].forEach(s => saveRecordToTable({ name: s.name, class: s.class, gender: s.gender, age: s.age }, s.ex, s.score));
+        }
+
+        function exportToExcel() {
+            if (examRecords.length === 0) return showToast('Bảng dữ liệu đang trống!', 'warning');
+            if (typeof XLSX === 'undefined') return alert('Chưa tải được thư viện xuất Excel. Kiểm tra kết nối Internet!');
+            const rows = examRecords.map((r, index) => ({
+                "STT": index + 1, "Họ và Tên": r.name, "Lớp": r.class, "Giới tính": r.gender === 'Nam' ? 'Nam' : 'Nữ',
+                "Tuổi": r.age, "Nội dung kiểm tra": r.exerciseName, "Kết quả đo": `${r.score} ${r.unit}`,
+                "Điểm số thô": r.score, "Thời gian thực hiện": r.timestamp, "Xếp loại thể lực": r.evaluation
+            }));
+            const worksheet = XLSX.utils.json_to_sheet(rows);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Ket_Qua_The_Luc");
+            XLSX.writeFile(workbook, "ket_qua_danh_gia_the_luc_QD53.xlsx");
+        }
+
+        function openStandardsModal() {
+            const container = document.getElementById('standards-modal-body');
+            let html = '';
+            ['situp', 'pushup', 'jump'].forEach(exKey => {
+                const std = STANDARDS[exKey];
+                html += `<div class="bg-slate-900 border border-slate-700 rounded-xl p-3"><h4 class="font-bold text-sm text-sky-400 mb-2">${std.title}</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3">${['Nam', 'Nu'].map(gKey => `<div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800"><div class="font-bold text-xs text-white mb-2">${gKey === 'Nam' ? '👦 Nam' : '👧 Nữ'}</div><div class="space-y-1.5">${[15, 16, 17].map(age => `<div class="flex items-center justify-between"><span class="text-slate-300">${age} tuổi:</span><div class="flex items-center gap-1.5"><span>Đạt≥</span><input type="number" value="${std[gKey][age][0]}" onchange="updateStandardVal('${exKey}','${gKey}',${age},0,this.value)" class="w-14 bg-slate-900 border border-slate-600 rounded px-1 py-0.5 text-center text-sky-400 font-bold"><span>Tốt≥</span><input type="number" value="${std[gKey][age][1]}" onchange="updateStandardVal('${exKey}','${gKey}',${age},1,this.value)" class="w-14 bg-slate-900 border border-slate-600 rounded px-1 py-0.5 text-center text-emerald-400 font-bold"></div></div>`).join('')}</div></div>`).join('')}</div></div>`;
+            });
+            container.innerHTML = html;
+            document.getElementById('standards-modal').classList.remove('hidden');
+        }
+
+        function updateStandardVal(exKey, gender, age, idx, val) {
+            STANDARDS[exKey][gender][age][idx] = parseInt(val) || 0;
+            try { localStorage.setItem('pe_ai_standards', JSON.stringify(STANDARDS)); } catch (e) {}
+            updateLiveScoreUI();
+        }
+
+        function resetStandardsDefault() {
+            STANDARDS = JSON.parse(JSON.stringify(DEFAULT_STANDARDS));
+            try { localStorage.setItem('pe_ai_standards', JSON.stringify(STANDARDS)); } catch (e) {}
+            openStandardsModal();
+            updateLiveScoreUI();
+        }
+
+        function closeStandardsModal() {
+            document.getElementById('standards-modal').classList.add('hidden');
+        }
+
+        window.addEventListener('keydown', (e) => {
+            const tag = document.activeElement?.tagName;
+            if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+            if (e.key === 's' || e.key === 'S') { e.preventDefault(); if (!isRunning) startExam(); }
+            else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); resetExam(); }
+            else if (e.key === 'n' || e.key === 'N') { e.preventDefault(); nextStudent(); }
+        });
+
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const colors = {
+                success: 'border-emerald-500 bg-emerald-950 text-emerald-200',
+                warning: 'border-amber-500 bg-amber-950 text-amber-200',
+                info: 'border-sky-500 bg-slate-900 text-sky-200'
+            };
+            const el = document.createElement('div');
+            el.className = `px-3.5 py-2 rounded-xl border shadow-xl text-xs font-semibold transition-all duration-300 ${colors[type] || colors.info}`;
+            el.innerText = msg;
+            container.appendChild(el);
+            setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 2800);
+        }
+
+        // KHỞI CHẠY NGAY LẬP TỨC KHI DOM SẴN SÀNG (KHÔNG ĐỢI CDN CHẬM)
+        document.addEventListener('DOMContentLoaded', function () {
+            syncStudentInfo();
+            renderRecordsTable();
+            updateJumpPanelLabels();
+            mainRenderLoop();
+            initMediaPipePose();
+            startCameraStream('environment');
+        });
+    </script>
+</body>
+</html>
