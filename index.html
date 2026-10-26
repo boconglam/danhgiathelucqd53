@@ -33,14 +33,6 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#eef9ff',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                        }
                     }
                 }
             }
@@ -53,7 +45,7 @@
             overflow-x: hidden;
         }
         .glass-panel {
-            background: rgba(17, 24, 39, 0.85);
+            background: rgba(17, 24, 39, 0.88);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
@@ -68,7 +60,6 @@
             color: #ffffff !important;
             border-color: #38bdf8 !important;
         }
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -80,42 +71,39 @@
             background: #334155;
             border-radius: 4px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans antialiased selection:bg-sky-500 selection:text-white">
 
     <!-- HEADER BAR -->
-    <header class="glass-panel sticky top-0 z-40 border-b border-slate-800 px-4 lg:px-8 py-3">
-        <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-4">
+    <header class="glass-panel sticky top-0 z-40 border-b border-slate-800 px-3 lg:px-8 py-3">
+        <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center shadow-lg shadow-sky-500/20">
                     <i class="fa-solid fa-person-running text-white text-xl"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-lg md:text-xl font-extrabold tracking-tight text-white">AI ĐÁNH GIÁ THỂ LỰC HỌC SINH</h1>
+                        <h1 class="text-base md:text-xl font-extrabold tracking-tight text-white">AI ĐÁNH GIÁ THỂ LỰC HỌC SINH</h1>
                         <span class="hidden sm:inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">
                             QĐ 53/2008/QĐ-BGDĐT
                         </span>
                     </div>
-                    <p class="text-xs text-slate-400">Hệ thống Thị giác Máy tính MediaPipe Pose • Tự động chấm điểm, phân loại & xuất Excel</p>
+                    <p class="text-[11px] md:text-xs text-slate-400">Gập bụng • Chống đẩy • Bật xa tại chỗ (Đo vạch xuất phát & vị trí rơi)</p>
                 </div>
             </div>
 
             <!-- 3 Exercise Mode Selector Tabs -->
-            <div class="flex items-center bg-slate-900/90 p-1.5 rounded-xl border border-slate-800 gap-1.5">
-                <button onclick="switchExercise('situp')" id="tab-situp" class="exercise-tab active-tab px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center gap-2 border border-transparent">
+            <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 gap-1 w-full sm:w-auto justify-between sm:justify-start">
+                <button onclick="switchExercise('situp')" id="tab-situp" class="exercise-tab active-tab flex-1 sm:flex-initial justify-center px-3 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all flex items-center gap-1.5 border border-transparent">
                     <i class="fa-solid fa-mattress-pillow"></i>
                     <span>1. Gập bụng (30s)</span>
                 </button>
-                <button onclick="switchExercise('pushup')" id="tab-pushup" class="exercise-tab px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all flex items-center gap-2 border border-transparent">
+                <button onclick="switchExercise('pushup')" id="tab-pushup" class="exercise-tab flex-1 sm:flex-initial justify-center px-3 py-2 rounded-lg text-xs md:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all flex items-center gap-1.5 border border-transparent">
                     <i class="fa-solid fa-dumbbell"></i>
                     <span>2. Chống đẩy</span>
                 </button>
-                <button onclick="switchExercise('jump')" id="tab-jump" class="exercise-tab px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all flex items-center gap-2 border border-transparent">
+                <button onclick="switchExercise('jump')" id="tab-jump" class="exercise-tab flex-1 sm:flex-initial justify-center px-3 py-2 rounded-lg text-xs md:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all flex items-center gap-1.5 border border-transparent">
                     <i class="fa-solid fa-ruler-horizontal"></i>
                     <span>3. Bật xa tại chỗ</span>
                 </button>
@@ -124,7 +112,7 @@
             <!-- Quick Actions -->
             <div class="flex items-center gap-2">
                 <button onclick="openStandardsModal()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center gap-2 border border-slate-700 transition">
-                    <i class="fa-solid fa-Sliders text-amber-400"></i>
+                    <i class="fa-solid fa-sliders text-amber-400"></i>
                     <span class="hidden md:inline">Bảng Tiêu Chuẩn</span>
                 </button>
                 <button onclick="exportToExcel()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-emerald-600/20 transition">
@@ -136,55 +124,57 @@
     </header>
 
     <!-- MAIN CONTENT GRID -->
-    <main class="flex-1 max-w-[1600px] w-full mx-auto p-4 lg:p-6 space-y-6">
+    <main class="flex-1 max-w-[1600px] w-full mx-auto p-3 lg:p-6 space-y-5">
         
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
             
             <!-- LEFT 8 COLS: AI CAMERA HUD & CONTROLS -->
             <div class="lg:col-span-8 space-y-4">
                 
-                <!-- Camera Source & Mobile Front/Back Controls Toolbar -->
-                <div class="glass-panel rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3">
+                <!-- CAMERA SOURCE & POSITIONING GUIDE TOOLBAR -->
+                <div class="glass-panel rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2.5">
                     <div class="flex flex-wrap items-center gap-2 flex-1">
                         <!-- Source Dropdown -->
                         <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
                             <i class="fa-solid fa-video text-sky-400 text-xs"></i>
-                            <select id="camera-select" onchange="handleCameraSourceChange()" class="bg-transparent text-xs font-medium text-slate-200 focus:outline-none pr-1">
-                                <option value="webcam">📱 Camera Điện thoại / Webcam Trực tiếp</option>
-                                <option value="sim" selected>🤖 Chế độ Mô phỏng AI (Demo tương tác)</option>
+                            <select id="camera-select" onchange="handleCameraSourceChange()" class="bg-transparent text-xs font-semibold text-slate-200 focus:outline-none pr-1">
+                                <option value="webcam" selected>📷 Camera Trực tiếp (Điện thoại / Webcam)</option>
+                                <option value="sim">🤖 Chế độ Mô phỏng AI (Demo không cần Cam)</option>
                                 <option value="ip">📡 DroidCam Wi-Fi IP / Luồng HTTP</option>
                                 <option value="file">🎬 Tải file Video mẫu (.mp4, .webm)</option>
                             </select>
                         </div>
 
-                        <!-- QUICK MOBILE CAMERA FRONT / BACK BUTTONS -->
+                        <!-- DIRECT CAMERA LAUNCH BUTTONS (FIX CAMERA NOT OPENING) -->
                         <div class="flex items-center gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800">
-                            <button onclick="openMobileCamera('environment')" id="btn-cam-rear" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-sky-600 text-slate-200 hover:text-white border border-slate-700 transition flex items-center gap-1.5" title="Mở Camera sau điện thoại để quay học sinh">
-                                <i class="fa-solid fa-camera text-sky-400"></i>
-                                <span>Cam Sau (Quay HS)</span>
+                            <button onclick="startCameraStream('environment')" id="btn-cam-rear" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-sky-600 hover:bg-sky-500 text-white border border-sky-400 transition flex items-center gap-1.5 shadow" title="Mở Camera sau điện thoại hoặc Webcam chính">
+                                <i class="fa-solid fa-camera"></i>
+                                <span>Mở Cam Sau / Webcam</span>
                             </button>
-                            <button onclick="openMobileCamera('user')" id="btn-cam-front" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-sky-600 text-slate-200 hover:text-white border border-slate-700 transition flex items-center gap-1.5" title="Mở Camera trước điện thoại để tự tập">
+                            <button onclick="startCameraStream('user')" id="btn-cam-front" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-sky-600 text-slate-200 hover:text-white border border-slate-700 transition flex items-center gap-1.5" title="Mở Camera trước điện thoại">
                                 <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i>
                                 <span>Cam Trước</span>
                             </button>
-                            <button onclick="flipMobileCamera()" id="btn-cam-flip" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-600/20 hover:bg-sky-600 text-sky-300 hover:text-white border border-sky-500/30 transition flex items-center gap-1" title="Đổi nhanh Camera Trước / Sau">
+                            <button onclick="flipMobileCamera()" id="btn-cam-flip" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white border border-slate-700 transition flex items-center gap-1" title="Đổi nhanh Camera Trước / Sau">
                                 <i class="fa-solid fa-camera-rotate"></i>
                                 <span class="hidden sm:inline">Đổi Cam</span>
                             </button>
                         </div>
 
-                        <!-- Dynamic Sub-controls based on source -->
-                        <div id="webcam-device-wrap" class="hidden items-center gap-2">
-                            <select id="webcam-device-list" onchange="startWebcamByDeviceId()" class="bg-slate-900 text-xs text-slate-200 px-2.5 py-1.5 rounded-xl border border-slate-800 focus:outline-none max-w-[180px] truncate">
-                                <option value="">Tự động chọn cổng Camera</option>
+                        <!-- Webcam device selector on PC -->
+                        <div id="webcam-device-wrap" class="flex items-center gap-1.5">
+                            <select id="webcam-device-list" onchange="startWebcamByDeviceId()" class="bg-slate-900 text-xs text-slate-200 px-2.5 py-1.5 rounded-xl border border-slate-800 focus:outline-none max-w-[175px] truncate">
+                                <option value="">-- Chọn cổng Camera --</option>
                             </select>
                         </div>
 
+                        <!-- IP Cam Input -->
                         <div id="ip-cam-wrap" class="hidden items-center gap-1.5">
                             <input type="text" id="ip-cam-input" placeholder="VD: 192.168.1.15:4747" value="192.168.1.15" class="bg-slate-900 text-xs text-slate-200 px-3 py-1.5 rounded-xl border border-slate-700 w-40 focus:outline-none focus:border-sky-500">
                             <button onclick="connectIpCamera()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold rounded-xl transition">Kết nối</button>
                         </div>
 
+                        <!-- Video File Upload -->
                         <div id="file-upload-wrap" class="hidden items-center gap-2">
                             <label class="cursor-pointer px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5">
                                 <i class="fa-solid fa-upload"></i> Chọn Video
@@ -193,98 +183,198 @@
                         </div>
                     </div>
 
+                    <!-- Guide Frame & Mirror Controls -->
                     <div class="flex flex-wrap items-center gap-2.5">
-                        <!-- POSITIONING GUIDE CONTROLS -->
-                        <div id="guide-controls-wrap" class="flex items-center gap-2 bg-slate-900/90 px-2.5 py-1 rounded-xl border border-amber-500/30">
-                            <label class="flex items-center gap-1.5 text-xs font-semibold text-amber-300 cursor-pointer select-none" title="Hiển thị khung định vị vị trí người nằm trên màn hình">
-                                <input type="checkbox" id="guide-toggle" checked class="rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-0">
-                                <span>🎯 Khung căn chỉnh vị trí</span>
-                            </label>
-                            <button onclick="toggleGuideDirection()" id="btn-guide-dir" class="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] font-semibold text-sky-300 border border-slate-700 transition flex items-center gap-1" title="Đảo hướng nằm (Đầu bên Trái ↔ Đầu bên Phải)">
-                                <i class="fa-solid fa-arrows-left-right"></i>
-                                <span id="guide-dir-label">Đầu: Bên Trái</span>
-                            </button>
-                        </div>
+                        <label class="flex items-center gap-1.5 text-xs font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-lg cursor-pointer select-none">
+                            <input type="checkbox" id="guide-frame-toggle" checked class="rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-0">
+                            <span>🎯 Khung định vị & Thước đo</span>
+                        </label>
 
-                        <label class="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer select-none">
-                            <input type="checkbox" id="mirror-toggle" checked class="rounded bg-slate-800 border-slate-700 text-sky-500 focus:ring-0">
+                        <button onclick="togglePoseDirection()" id="btn-pose-dir" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 transition" title="Đảo hướng nằm hoặc hướng bật nhảy Trái / Phải">
+                            <i class="fa-solid fa-arrows-left-right text-sky-400 mr-1"></i>
+                            <span id="pose-dir-label">Hướng: Trái ➔ Phải</span>
+                        </button>
+
+                        <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer select-none">
+                            <input type="checkbox" id="mirror-toggle" class="rounded bg-slate-800 border-slate-700 text-sky-500 focus:ring-0">
                             <span>Lật gương</span>
                         </label>
-                        <label class="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer select-none">
+
+                        <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer select-none">
                             <input type="checkbox" id="sound-toggle" checked class="rounded bg-slate-800 border-slate-700 text-sky-500 focus:ring-0">
-                            <span>Âm Beep</span>
+                            <span>Beep</span>
                         </label>
-                        <span id="ai-status-badge" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span id="ai-status-text">AI Sẵn sàng</span>
-                        </span>
                     </div>
                 </div>
 
-                <!-- HTTPS / MOBILE CAMERA PERMISSION WARNING BANNER (Hidden unless needed) -->
-                <div id="https-warning-banner" class="hidden rounded-2xl p-4 bg-amber-950/80 border border-amber-500/50 text-amber-200 text-xs space-y-1.5">
-                    <div class="font-bold text-sm text-amber-300 flex items-center gap-2">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                        <span>Lưu ý mở khoá Camera trên trình duyệt Điện thoại:</span>
+                <!-- CAMERA STATUS / PERMISSION BANNER -->
+                <div id="camera-alert-banner" class="hidden rounded-2xl p-3.5 bg-amber-950/85 border border-amber-500/50 text-amber-200 text-xs flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-start gap-2.5 flex-1">
+                        <i class="fa-solid fa-circle-exclamation text-amber-400 text-base mt-0.5"></i>
+                        <div id="camera-alert-text" class="leading-relaxed">
+                            Đang chờ cấp quyền Camera... Nếu trình duyệt hỏi quyền truy cập Máy ảnh, hãy nhấn <b>Cho phép (Allow)</b>.
+                        </div>
                     </div>
-                    <p id="https-warning-detail" class="leading-relaxed text-amber-100/90">
-                        Trình duyệt điện thoại (Safari / Chrome) yêu cầu trang web chạy qua giao thức bảo mật <b>HTTPS</b> hoặc <b>localhost</b> để cấp quyền Camera. Hãy tải file này lên <b>Netlify Drop (app.netlify.com/drop)</b> hoặc <b>GitHub Pages</b> để lấy link HTTPS chạy trực tiếp ngoài sân thể dục.
-                    </p>
+                    <div class="flex items-center gap-2">
+                        <button onclick="startCameraStream(currentFacingMode)" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
+                            Thử bật lại Camera
+                        </button>
+                        <button onclick="switchToSimMode()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition">
+                            Dùng Chế độ Mô phỏng
+                        </button>
+                    </div>
                 </div>
 
                 <!-- MAIN VIDEO & CANVAS HUD VIEWPORT -->
                 <div class="relative rounded-2xl overflow-hidden bg-slate-950 border-2 border-slate-800 shadow-2xl aspect-video w-full">
-                    <!-- Hidden source video / IP image -->
-                    <video id="input-video" class="hidden" autoplay playsinline muted loop></video>
+                    <!-- Video element for Webcam / Mobile Camera -->
+                    <video id="input-video" class="hidden" autoplay playsinline muted></video>
                     <img id="ip-stream-img" class="hidden" crossorigin="anonymous" alt="DroidCam Stream">
                     
-                    <!-- Main OpenCV-like Render Canvas -->
+                    <!-- Main OpenCV + Ruler + Positioning Guide Canvas -->
                     <canvas id="output-canvas" width="1280" height="720" class="w-full h-full object-contain block cursor-crosshair touch-none"></canvas>
 
-                    <!-- Floating Mobile Camera Switch Button on Viewport (Visible when using Camera) -->
-                    <div id="floating-cam-controls" class="hidden absolute top-3 right-3 z-30 items-center gap-2">
-                        <button onclick="flipMobileCamera()" class="px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-sky-600 text-white text-xs font-bold border border-sky-500/50 shadow-lg backdrop-blur-md flex items-center gap-2 active:scale-95 transition">
-                            <i class="fa-solid fa-camera-rotate text-sky-400"></i>
-                            <span id="floating-cam-label">Đang dùng: Cam Sau</span>
+                    <!-- Floating Top-Right Camera Status & Quick Flip -->
+                    <div class="absolute top-3 right-3 z-30 flex items-center gap-2">
+                        <span id="ai-status-badge" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900/90 text-emerald-400 border border-emerald-500/40 backdrop-blur-md flex items-center gap-1.5 shadow-lg">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span id="ai-status-text">Sẵn sàng</span>
+                        </span>
+                        <button onclick="flipMobileCamera()" id="floating-flip-btn" class="px-3 py-1.5 rounded-xl bg-sky-600/90 hover:bg-sky-500 text-white text-xs font-bold border border-sky-400 shadow-lg backdrop-blur-md flex items-center gap-1.5 active:scale-95 transition">
+                            <i class="fa-solid fa-camera-rotate"></i>
+                            <span>Đổi Cam</span>
                         </button>
                     </div>
 
-                    <!-- Interactive Simulation Slider Overlay (Visible in Sim Mode) -->
-                    <div id="sim-control-overlay" class="absolute top-3 right-3 md:top-4 md:right-16 bg-slate-900/90 backdrop-blur-md border border-sky-500/40 rounded-xl p-3 w-56 md:w-64 shadow-xl z-20">
-                    <div class="flex items-center gap-2">
-                        <button onclick="manualSaveResult()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-lg shadow-indigo-600/25 flex items-center gap-2 transition active:scale-95">
-                            <i class="fa-solid fa-floppy-disk"></i>
-                            <span>Lưu kết quả ngay</span>
-                        </button>
+                    <!-- Interactive Simulation Slider Overlay (Only visible when cameraMode === 'sim') -->
+                    <div id="sim-control-overlay" class="hidden absolute top-14 right-3 md:right-16 bg-slate-900/95 backdrop-blur-md border border-sky-500/40 rounded-xl p-3 w-60 md:w-64 shadow-xl z-20">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
+                                <i class="fa-solid fa-robot"></i> Bộ giả lập tư thế AI
+                            </span>
+                            <label class="flex items-center gap-1 text-[11px] text-amber-300 cursor-pointer">
+                                <input type="checkbox" id="sim-auto-cycle" checked class="rounded bg-slate-800 border-slate-600 text-amber-500">
+                                Tự động tập
+                            </label>
+                        </div>
+                        <div id="sim-angle-controls">
+                            <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                <span id="sim-slider-label">Góc khớp (Độ):</span>
+                                <span id="sim-slider-val" class="font-mono font-bold text-amber-400">145°</span>
+                            </div>
+                            <input type="range" id="sim-angle-slider" min="45" max="175" value="145" oninput="onManualSimSlider()" class="w-full accent-sky-500 h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+                        </div>
+                        <div id="sim-jump-controls" class="hidden mt-2 pt-2 border-t border-slate-800">
+                            <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                <span>Mục tiêu bật xa:</span>
+                                <span id="sim-jump-target-val" class="font-mono font-bold text-emerald-400">215 cm</span>
+                            </div>
+                            <input type="range" id="sim-jump-slider" min="100" max="280" value="215" oninput="document.getElementById('sim-jump-target-val').innerText = this.value + ' cm'" class="w-full accent-emerald-500 h-1.5 bg-slate-700 rounded-lg cursor-pointer mb-2">
+                            <button onclick="triggerSimJump()" class="w-full py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition shadow">
+                                <i class="fa-solid fa-person-running mr-1"></i> Mô phỏng Nhảy Bật Xa!
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- LONG JUMP CALIBRATION BAR (Only visible when Exercise 3: Bật xa is selected) -->
-                <div id="jump-calibration-panel" class="hidden glass-panel rounded-2xl p-4 border border-amber-500/30 bg-amber-950/10">
-                    <div class="flex flex-wrap items-center justify-between gap-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-                                <i class="fa-solid fa-ruler-combined text-lg"></i>
+                <!-- MODULE 3 DEDICATED PANEL: BẬT XA TẠI CHỖ (VỊ TRÍ BẮT ĐẦU - THƯỚC ĐO KHOẢNG CÁCH - VỊ TRÍ RƠI XUỐNG) -->
+                <div id="jump-calibration-panel" class="hidden glass-panel rounded-2xl p-4 border-2 border-amber-500/40 bg-amber-950/15 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-amber-500/20 pb-2.5">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                                <i class="fa-solid fa-ruler-horizontal text-lg"></i>
                             </div>
                             <div>
-                                <h3 class="text-sm font-bold text-amber-300">Hiệu chuẩn Thước đo Bật xa tại chỗ (Calibration)</h3>
-                                <p class="text-xs text-slate-400">Kéo 2 vạch mốc trực tiếp trên màn hình Camera hoặc nhập khoảng cách chuẩn thực tế giữa 2 vạch.</p>
+                                <h3 class="text-sm font-extrabold text-amber-300 uppercase tracking-wide">
+                                    Thước Đo Bật Xa Tại Chỗ: Vị Trí Bắt Đầu Nhảy & Vị Trí Rơi Xuống
+                                </h3>
+                                <p class="text-xs text-slate-300">
+                                    Kéo trực tiếp <b>Vạch Xuất Phát (Màu Vàng)</b> và <b>Mốc Thước Chuẩn (Màu Xanh Dương)</b> trên màn hình Camera để khớp với sân tập.
+                                </p>
                             </div>
                         </div>
 
-                        <div class="flex flex-wrap items-center gap-3">
-                            <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700">
-                                <span class="text-xs text-slate-400">Khoảng cách 2 vạch chuẩn:</span>
-                                <input type="number" id="calib-distance-cm" value="250" min="50" max="500" onchange="updateJumpCalibration()" class="w-16 bg-slate-800 text-amber-400 font-mono font-bold text-xs px-2 py-1 rounded border border-slate-600 text-center">
-                                <span class="text-xs font-semibold text-slate-300">cm</span>
-                            </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="lockCurrentFootAsTakeoff()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5" title="Lấy vị trí mũi chân hiện tại của học sinh làm Vạch bắt đầu bật nhảy">
+                                <i class="fa-solid fa-location-crosshairs"></i>
+                                <span>Đặt Vạch Bắt Đầu theo chân HS</span>
+                            </button>
+                            <button onclick="clearLandingMarker()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-semibold transition">
+                                <i class="fa-solid fa-eraser mr-1"></i> Xóa Vạch Rơi
+                            </button>
+                        </div>
+                    </div>
 
-                            <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700">
-                                <span class="text-xs text-slate-400">Chỉnh tay KQ đo:</span>
-                                <input type="number" id="manual-jump-cm" placeholder="0" class="w-16 bg-slate-800 text-emerald-400 font-mono font-bold text-xs px-2 py-1 rounded border border-slate-600 text-center">
-                                <button onclick="applyManualJumpScore()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg">Áp dụng</button>
+                    <!-- 3 Key Jump Metrics: Vị trí bắt đầu, Vị trí rơi xuống, Khoảng cách bật xa -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-amber-500/30 flex items-center justify-between">
+                            <div>
+                                <span class="text-[11px] text-amber-400 font-bold uppercase block">1. Vị trí bắt đầu nhảy</span>
+                                <span class="text-xs text-slate-400">Vạch xuất phát (0 cm)</span>
+                            </div>
+                            <span id="jump-start-pos-label" class="font-mono font-bold text-sm text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/30">
+                                Mốc 0 cm
+                            </span>
+                        </div>
+
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-emerald-500/30 flex items-center justify-between">
+                            <div>
+                                <span class="text-[11px] text-emerald-400 font-bold uppercase block">2. Vị trí rơi xuống (Tiếp đất)</span>
+                                <span class="text-xs text-slate-400">Tính tại gót chân tiếp đất</span>
+                            </div>
+                            <span id="jump-landing-pos-label" class="font-mono font-bold text-sm text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/30">
+                                Chưa tiếp đất
+                            </span>
+                        </div>
+
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-sky-500/30 flex items-center justify-between">
+                            <div>
+                                <span class="text-[11px] text-sky-400 font-bold uppercase block">3. Độ dài Thước đo chuẩn</span>
+                                <span class="text-xs text-slate-400">Từ vạch 0 đến mốc chuẩn</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <input type="number" id="calib-distance-cm" value="250" min="50" max="500" onchange="updateJumpCalibration()" class="w-16 bg-slate-800 text-sky-400 font-mono font-bold text-xs px-2 py-1 rounded border border-slate-600 text-center">
+                                <span class="text-xs font-bold text-slate-300">cm</span>
                             </div>
                         </div>
+
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-700 flex items-center justify-between">
+                            <div>
+                                <span class="text-[11px] text-slate-300 font-bold uppercase block">Nhập / Chỉnh tay KQ</span>
+                                <span class="text-xs text-slate-400">Đặt vạch rơi theo số đo</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <input type="number" id="manual-jump-cm" placeholder="VD: 215" class="w-16 bg-slate-800 text-emerald-400 font-mono font-bold text-xs px-2 py-1 rounded border border-slate-600 text-center">
+                                <button onclick="applyManualJumpScore()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg">Ghi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME / EXAM ACTION BUTTONS & HOTKEYS BAR -->
+                <div class="glass-panel rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="startExam()" id="btn-start" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-bold text-xs md:text-sm shadow-lg shadow-emerald-600/30 flex items-center gap-2 transition active:scale-95">
+                            <i class="fa-solid fa-play"></i>
+                            <span id="btn-start-text">Bắt đầu 30s [Phím S]</span>
+                        </button>
+
+                        <button onclick="resetExam()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs md:text-sm border border-slate-700 flex items-center gap-1.5 transition active:scale-95">
+                            <i class="fa-solid fa-rotate-right text-amber-400"></i>
+                            <span>Thi lại [Phím R]</span>
+                        </button>
+
+                        <button onclick="nextStudent()" class="px-3.5 py-2.5 rounded-xl bg-sky-600/20 hover:bg-sky-600/30 text-sky-300 font-semibold text-xs md:text-sm border border-sky-500/30 flex items-center gap-1.5 transition active:scale-95">
+                            <i class="fa-solid fa-user-plus text-sky-400"></i>
+                            <span>Đổi thí sinh [Phím N]</span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="manualSaveResult()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs md:text-sm shadow-lg shadow-indigo-600/25 flex items-center gap-2 transition active:scale-95">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            <span>Lưu kết quả vào bảng</span>
+                        </button>
                     </div>
                 </div>
 
@@ -293,7 +383,7 @@
             <!-- RIGHT 4 COLS: STUDENT INFO, EXERCISE SETTINGS & LIVE CLASSIFICATION -->
             <div class="lg:col-span-4 space-y-5">
                 
-                <!-- 1. Student Information Card (Ported from input_student_info in Gap_bung.py) -->
+                <!-- 1. Student Information Card -->
                 <div class="glass-panel rounded-2xl p-5 space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                         <div class="flex items-center gap-2">
@@ -324,9 +414,9 @@
                             <div>
                                 <label class="block text-xs font-medium text-slate-400 mb-1">Độ tuổi</label>
                                 <select id="student-age" onchange="syncStudentInfo()" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-2.5 py-2 text-sm font-semibold text-white focus:outline-none focus:border-sky-500">
-                                    <option value="15">15 tuổi (Lớp 10)</option>
-                                    <option value="16" selected>16 tuổi (Lớp 11)</option>
-                                    <option value="17">17 tuổi (Lớp 12)</option>
+                                    <option value="15">15t (K10)</option>
+                                    <option value="16" selected>16t (K11)</option>
+                                    <option value="17">17t (K12)</option>
                                 </select>
                             </div>
                         </div>
@@ -393,13 +483,13 @@
                             </div>
                             <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-center">
                                 <label class="text-[10px] text-slate-400 block">Thời gian (Giây)</label>
-                                <input type="number" id="input-total-time" value="30" min="10" max="300" onchange="updateExerciseThresholds()" class="w-full bg-transparent text-center font-mono font-bold text-sm text-amber-400 focus:outline-none">
+                                <input type="number" id="input-total-time" value="30" min="5" max="300" onchange="updateExerciseThresholds()" class="w-full bg-transparent text-center font-mono font-bold text-sm text-amber-400 focus:outline-none">
                             </div>
                         </div>
 
                         <p id="exercise-guide-text" class="text-xs text-slate-400 leading-relaxed pt-1">
                             <i class="fa-solid fa-circle-info text-sky-400 mr-1"></i>
-                            Đặt Camera ngang hông (2.0 - 2.5m). Nằm ngửa góc hông <b>&gt;130°</b> sau đó gập bụng lên góc <b>&lt;65°</b> để hệ thống tính <b>+1 lần</b>.
+                            Đưa Camera sao cho người tập nằm khớp vào <b>Khung Định Vị</b> trên màn hình. Nằm ngửa góc hông <b>&gt;130°</b> rồi gập bụng lên góc <b>&lt;65°</b> để tính <b>+1 lần</b>.
                         </p>
                     </div>
                 </div>
@@ -500,9 +590,7 @@
                 </button>
             </div>
 
-            <div id="standards-modal-body" class="space-y-5 text-xs">
-                <!-- Dynamically rendered editable tables for Sit-ups, Push-ups, Standing Long Jump -->
-            </div>
+            <div id="standards-modal-body" class="space-y-5 text-xs"></div>
 
             <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
                 <button onclick="resetStandardsDefault()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
@@ -522,7 +610,6 @@
     <script>
         // ============================================================================
         // 1. BẢNG TIÊU CHUẨN THỂ LỰC (Quyết định 53/2008/QĐ-BGDĐT)
-        // Quy định: [Mức Đạt tối thiểu, Mức Tốt tối thiểu]
         // ============================================================================
         const DEFAULT_STANDARDS = {
             situp: {
@@ -575,32 +662,32 @@
                 angleDown: 130,
                 angleUp: 65,
                 totalTime: 30,
-                guide: 'Đặt Camera ngang hông (2.0 - 2.5m). Nằm ngửa góc hông >130° -> Gập lên <65° để tính +1 điểm.'
+                guide: 'Đưa Camera khớp Khung Định Vị. Nằm ngửa góc hông >130° -> Gập lên <65° để tính +1 điểm.'
             },
             pushup: {
                 id: 'pushup',
                 name: 'Nằm sấp chống đẩy',
                 shortName: 'Chống đẩy',
                 unit: 'lần',
-                angleDown: 95,   // Hạ khuỷu tay <= 95 độ
-                angleUp: 155,    // Đẩy thẳng tay >= 155 độ
+                angleDown: 95,
+                angleUp: 155,
                 totalTime: 30,
-                guide: 'Đặt Camera ngang thân người. Duỗi thẳng tay >155°, hạ ngực xuống góc khuỷu tay <95° rồi đẩy lên để tính +1 điểm.'
+                guide: 'Đưa Camera khớp Khung Định Vị. Duỗi thẳng tay >155°, hạ ngực xuống <95° rồi đẩy lên để tính +1 điểm.'
             },
             jump: {
                 id: 'jump',
                 name: 'Bật xa tại chỗ (cm)',
                 shortName: 'Bật xa tại chỗ',
                 unit: 'cm',
-                angleDown: 120,  // Khuỵu gối lấy đà
-                angleUp: 165,    // Bật duỗi
+                angleDown: 120,
+                angleUp: 165,
                 totalTime: 15,
-                guide: 'Đứng mũi chân sát Vạch Xuất Phát (Màu Vàng). Nhấn [S] rồi bật nhảy về phía trước. AI tự động đo khoảng cách tới gót chân tiếp đất.'
+                guide: 'Đứng sát Vạch Bắt Đầu (Màu Vàng 0cm). Bấm [S] rồi bật nhảy. Hệ thống tự động bắt Vị Trí Rơi Xuống (Gót chân) & đo khoảng cách cm.'
             }
         };
 
         let currentExercise = 'situp';
-        let counter = 0; // Hoặc khoảng cách cm đối với bật xa
+        let counter = 0;
         let stage = 'down';
         let feedback = 'San sang';
         let currentAngle = 0;
@@ -620,43 +707,35 @@
             age: 16
         };
 
-        // Trạng thái Camera trước / sau trên Điện thoại & Hướng nằm của Khung căn chỉnh
-        let currentFacingMode = 'environment'; // 'environment' = Cam sau, 'user' = Cam trước
-        let guideHeadOnLeft = true; // true = Đầu/Vai bên Trái, Chân bên Phải; false = Đảo ngược
+        // Hướng người tập / hướng bật nhảy: 'left-to-right' (Đầu bên trái / Nhảy sang phải) hoặc 'right-to-left'
+        let poseDirection = 'left-to-right';
         let isPersonInFrame = false;
 
-        // Calibration & Jump tracking state
+        // Trạng thái Camera
+        let currentFacingMode = 'environment';
+        let cameraMode = 'webcam'; // Mặc định ưu tiên mở Camera thật ngay khi vào ứng dụng
+        let activeMediaStream = null;
+
+        // Trạng thái chuyên biệt cho Module 3: Bật xa tại chỗ (Vị trí bắt đầu - Thước đo - Vị trí rơi)
         let jumpCalib = {
-            startLineX: 0.22,    // 22% of canvas width (Vạch xuất phát)
-            refLineX: 0.82,      // 82% of canvas width (Mốc chuẩn)
-            realDistCm: 250,     // Khoảng cách thực tế giữa 2 vạch (250 cm)
-            draggingMarker: null,
-            maxJumpCm: 0,
-            landingX: null,
-            takeoffDetected: false
+            startLineX: 0.20,      // Vạch bắt đầu bật nhảy (0 cm)
+            refLineX: 0.82,        // Vạch mốc chuẩn (250 cm)
+            realDistCm: 250,       // Khoảng cách thực tế giữa 2 vạch (cm)
+            draggingMarker: null,  // 'start' | 'ref' | 'landing'
+            landingX: null,        // Vị trí rơi xuống (tọa độ X chuẩn hóa 0..1)
+            takeoffFootX: null,    // Vị trí chân lúc bắt đầu giậm nhảy
+            jumpPhase: 'ready',    // 'ready' -> 'airborne' -> 'landed'
+            liveFootCm: 0          // Khoảng cách chân hiện tại trên thước (cm)
         };
 
-        // Simulation state
-        let cameraMode = 'sim'; // 'sim' | 'webcam' | 'ip' | 'file'
         let simTime = 0;
-        let simJumpAnim = { active: false, progress: 0, targetCm: 212 };
+        let simJumpAnim = { active: false, progress: 0, targetCm: 215 };
         let latestPoseLandmarks = null;
 
-        // Records Database
         let examRecords = JSON.parse(localStorage.getItem('pe_ai_records')) || [];
 
-        // Đảo chiều khung hướng dẫn người nằm (Đầu bên Trái <-> Đầu bên Phải)
-        function toggleGuideDirection() {
-            guideHeadOnLeft = !guideHeadOnLeft;
-            const lbl = document.getElementById('guide-dir-label');
-            if (lbl) {
-                lbl.innerText = guideHeadOnLeft ? 'Đầu: Bên Trái' : 'Đầu: Bên Phải';
-            }
-            showToast(guideHeadOnLeft ? 'Hướng nằm: Đầu/Vai bên Trái - Chân bên Phải' : 'Hướng nằm: Đầu/Vai bên Phải - Chân bên Trái', 'info');
-        }
-
         // ============================================================================
-        // 3. ÂM THANH BEEP (Tương đương winsound.Beep(800, 100) & (1200, 700))
+        // 3. ÂM THANH BEEP
         // ============================================================================
         let audioCtx = null;
         function playBeep(freq = 800, durationMs = 100) {
@@ -684,7 +763,7 @@
         }
 
         // ============================================================================
-        // 4. TOÁN HỌC GÓC KHỚP (Chuyển đổi chính xác từ calculate_angle trong Gap_bung.py)
+        // 4. TOÁN HỌC GÓC KHỚP & CHUYỂN ĐỔI TỌA ĐỘ THƯỚC ĐO BẬT XA
         // ============================================================================
         function calculateAngle(a, b, c) {
             const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
@@ -700,13 +779,42 @@
             return outMin + ((clamped - inMin) / (inMax - inMin)) * (outMax - outMin);
         }
 
-        // ============================================================================
-        // 5. THUẬT TOÁN CHẤM ĐIỂM AI CHO 3 NỘI DUNG THI
-        // ============================================================================
-        function processExerciseBiomechanics(landmarks, canvasW, canvasH) {
-            if (!landmarks || landmarks.length < 33) return;
+        // Chuyển đổi từ tọa độ X trên màn hình sang số đo cm trên thước bật xa
+        function xToJumpCm(normX) {
+            const span = jumpCalib.refLineX - jumpCalib.startLineX;
+            if (Math.abs(span) < 0.02) return 0;
+            const rawCm = ((normX - jumpCalib.startLineX) / span) * jumpCalib.realDistCm;
+            return Math.max(0, Math.round(rawCm));
+        }
 
-            // Tự động chọn bên Trái hoặc Phải có độ rõ (visibility) cao hơn giống Gap_bung.py
+        // Chuyển đổi từ số đo cm sang tọa độ X trên màn hình
+        function jumpCmToX(cmVal) {
+            const span = jumpCalib.refLineX - jumpCalib.startLineX;
+            return jumpCalib.startLineX + (cmVal / jumpCalib.realDistCm) * span;
+        }
+
+        // ============================================================================
+        // 5. THUẬT TOÁN CHẤM ĐIỂM AI CHO 3 NỘI DUNG THI & KIỂM TRA VỊ TRÍ TRONG KHUNG
+        // ============================================================================
+        function checkPersonInsideGuideFrame(shoulder, hip, knee, ankle) {
+            if (!shoulder || !hip || !ankle) return false;
+            if (currentExercise === 'situp') {
+                return (hip.x > 0.25 && hip.x < 0.75 && hip.y > 0.45 && hip.y < 0.88);
+            } else if (currentExercise === 'pushup') {
+                return (shoulder.x > 0.15 && shoulder.x < 0.85 && hip.y > 0.38 && ankle.y < 0.90);
+            } else if (currentExercise === 'jump') {
+                const distStart = Math.abs(ankle.x - jumpCalib.startLineX);
+                return distStart < 0.12 || jumpCalib.landingX !== null;
+            }
+            return false;
+        }
+
+        function processExerciseBiomechanics(landmarks, canvasW, canvasH) {
+            if (!landmarks || landmarks.length < 33) {
+                isPersonInFrame = false;
+                return;
+            }
+
             const visLeft = (landmarks[23]?.visibility || 0) + (landmarks[11]?.visibility || 0);
             const visRight = (landmarks[24]?.visibility || 0) + (landmarks[12]?.visibility || 0);
             const useLeft = visLeft >= visRight;
@@ -717,12 +825,15 @@
             const hip      = useLeft ? landmarks[23] : landmarks[24];
             const knee     = useLeft ? landmarks[25] : landmarks[26];
             const ankle    = useLeft ? landmarks[27] : landmarks[28];
-            const heel     = useLeft ? landmarks[29] : landmarks[30];
-            const footIdx  = useLeft ? landmarks[31] : landmarks[32];
 
+            // Lấy cả 2 gót chân để đo bật xa chính xác theo gót chân sau cùng
+            const leftHeel  = landmarks[29] || landmarks[27];
+            const rightHeel = landmarks[30] || landmarks[28];
+
+            isPersonInFrame = checkPersonInsideGuideFrame(shoulder, hip, knee, ankle);
             const cfg = EXERCISE_CONFIGS[currentExercise];
 
-            // --- MODULE 1: NẰM NGỬA GẬP BỤNG (30S) ---
+            // --- 1. NẰM NGỬA GẬP BỤNG ---
             if (currentExercise === 'situp') {
                 currentAngle = calculateAngle(shoulder, hip, knee);
                 progressBar = interp(currentAngle, cfg.angleUp, cfg.angleDown, 100, 0);
@@ -742,8 +853,7 @@
                     }
                 }
             }
-
-            // --- MODULE 2: NẰM SẤP CHỐNG ĐẨY (PUSH-UPS) ---
+            // --- 2. NẰM SẤP CHỐNG ĐẨY ---
             else if (currentExercise === 'pushup') {
                 currentAngle = calculateAngle(shoulder, elbow, wrist);
                 const bodyAlignAngle = calculateAngle(shoulder, hip, ankle);
@@ -769,76 +879,610 @@
                     }
                 }
             }
-
-            // --- MODULE 3: BẬT XA TẠI CHỖ (STANDING LONG JUMP) ---
+            // --- 3. BẬT XA TẠI CHỖ (ĐO VỊ TRÍ BẮT ĐẦU & VỊ TRÍ RƠI XUỐNG) ---
             else if (currentExercise === 'jump') {
                 currentAngle = calculateAngle(hip, knee, ankle);
-                const footX = heel ? heel.x : ankle.x;
-                const pixelSpan = Math.abs(jumpCalib.refLineX - jumpCalib.startLineX);
-                const distNormalized = Math.max(0, footX - jumpCalib.startLineX);
-                const currentCm = pixelSpan > 0.02 ? Math.round((distNormalized / pixelSpan) * jumpCalib.realDistCm) : 0;
 
-                progressBar = interp(currentCm, 0, 250, 0, 100);
+                // Chọn gót chân gần vạch xuất phát hơn (đúng luật đo bật xa tại chỗ)
+                const dirSign = Math.sign(jumpCalib.refLineX - jumpCalib.startLineX) || 1;
+                let rearHeelX = leftHeel.x;
+                if (dirSign > 0) {
+                    rearHeelX = Math.min(leftHeel.x, rightHeel.x);
+                } else {
+                    rearHeelX = Math.max(leftHeel.x, rightHeel.x);
+                }
+
+                const currentCm = xToJumpCm(rearHeelX);
+                jumpCalib.liveFootCm = currentCm;
+                progressBar = interp(currentCm, 0, jumpCalib.realDistCm, 0, 100);
+
+                if (!isRunning && !isFinished) {
+                    if (currentCm <= 20) {
+                        feedback = 'Đã đứng tại Vạch Bắt Đầu (0cm) -> Sẵn sàng bật nhảy!';
+                    } else {
+                        feedback = `Vị trí chân hiện tại trên thước: ${currentCm} cm`;
+                    }
+                }
 
                 if (isRunning && !isFinished) {
-                    if (currentCm <= 15) {
-                        feedback = 'Dung sat vach xuat phat -> Bat nhay!';
-                    } else if (currentCm > counter) {
-                        counter = currentCm;
-                        jumpCalib.landingX = footX;
-                        feedback = `Tiep dat: ${counter} cm!`;
-                        playBeep(950, 120);
-                        updateLiveScoreUI();
+                    if (currentCm <= 22) {
+                        jumpCalib.takeoffFootX = rearHeelX;
+                        jumpCalib.jumpPhase = 'ready';
+                        feedback = 'Giậm nhảy từ Vạch Bắt Đầu (0cm)!';
+                    } else if (currentCm > 35) {
+                        // Khi học sinh bật nhảy qua mốc 35cm và tiếp đất
+                        if (currentCm > counter) {
+                            counter = currentCm;
+                            jumpCalib.landingX = rearHeelX;
+                            jumpCalib.jumpPhase = 'landed';
+                            feedback = `Đã bắt Vị trí rơi xuống: ${counter} cm!`;
+                            playBeep(950, 120);
+                            updateLiveScoreUI();
+                            updateJumpPanelLabels();
+                        }
                     }
                 }
             }
         }
 
+        function updateJumpPanelLabels() {
+            const startLbl = document.getElementById('jump-start-pos-label');
+            const landLbl = document.getElementById('jump-landing-pos-label');
+            if (startLbl) {
+                startLbl.innerText = `Vạch 0 cm (${Math.round(jumpCalib.startLineX * 100)}% khung hình)`;
+            }
+            if (landLbl) {
+                if (jumpCalib.landingX !== null && counter > 0) {
+                    landLbl.innerText = `Cách vạch đầu: ${counter} cm`;
+                } else {
+                    landLbl.innerText = 'Chưa tiếp đất';
+                }
+            }
+        }
+
         // ============================================================================
-        // 6. BỘ MÔ PHỎNG TƯ THẾ AI (CHO PHÉP TEST NGAY KHÔNG CẦN CAMERA VẬT LÝ)
+        // 6. VẼ KHUNG ĐỊNH VỊ NGƯỜI TẬP (GẬP BỤNG, CHỐNG ĐẨY) & THƯỚC ĐO BẬT XA
+        // ============================================================================
+        const canvasEl = document.getElementById('output-canvas');
+        const ctx = canvasEl.getContext('2d');
+
+        // 6A. Khung định vị vị trí người nằm Gập bụng & Chống đẩy
+        function drawPositioningGuideOverlay(w, h) {
+            if (!document.getElementById('guide-frame-toggle').checked) return;
+            if (currentExercise === 'jump') return; // Bật xa dùng thước đo riêng bên dưới
+
+            ctx.save();
+            const isReadyColor = isPersonInFrame ? '#22c55e' : '#facc15';
+            const bgTint = isPersonInFrame ? 'rgba(34, 197, 94, 0.07)' : 'rgba(250, 204, 21, 0.06)';
+            const isLeftToRight = (poseDirection === 'left-to-right');
+
+            // Khung bao vùng tập luyện chuẩn
+            const boxX = w * 0.16;
+            const boxY = h * 0.34;
+            const boxW = w * 0.68;
+            const boxH = h * 0.46;
+
+            ctx.fillStyle = bgTint;
+            ctx.strokeStyle = isReadyColor;
+            ctx.lineWidth = 3;
+            ctx.setLineDash([12, 8]);
+            ctx.beginPath();
+            ctx.roundRect(boxX, boxY, boxW, boxH, 18);
+            ctx.fill();
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Nhãn trạng thái căn chỉnh Camera phía trên khung
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+            ctx.strokeStyle = isReadyColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(boxX + boxW / 2 - 230, boxY - 20, 460, 34, 10);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = isReadyColor;
+            ctx.font = 'bold 14px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(
+                isPersonInFrame
+                    ? '✅ VỊ TRÍ NGƯỜI TẬP ĐÃ KHỚP KHUNG CAMERA - SẴN SÀNG BẤM [S]'
+                    : `🎯 ĐƯA CAMERA ĐỂ NGƯỜI TẬP NẰM VÀO KHUNG (${currentExercise === 'situp' ? 'GẬP BỤNG' : 'CHỐNG ĐẨY'})`,
+                boxX + boxW / 2,
+                boxY + 2
+            );
+            ctx.textAlign = 'left';
+
+            // Đường mặt sàn chuẩn
+            const floorY = h * 0.75;
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(boxX + 20, floorY);
+            ctx.lineTo(boxX + boxW - 20, floorY);
+            ctx.stroke();
+
+            // Helper chuyển đổi tọa độ X theo hướng nằm Trái/Phải
+            const mapX = (normX) => isLeftToRight ? (normX * w) : ((1 - normX) * w);
+
+            if (currentExercise === 'situp') {
+                // Bóng mờ tư thế Nằm ngửa gập bụng
+                const headPt     = { x: mapX(0.24), y: h * 0.68 };
+                const shoulderPt = { x: mapX(0.31), y: h * 0.71 };
+                const hipPt      = { x: mapX(0.50), y: h * 0.73 };
+                const kneePt     = { x: mapX(0.66), y: h * 0.56 };
+                const footPt     = { x: mapX(0.77), y: h * 0.74 };
+
+                // Vẽ đường bóng mờ tư thế nằm chuẩn bị
+                ctx.strokeStyle = 'rgba(250, 204, 21, 0.45)';
+                ctx.lineWidth = 14;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.beginPath();
+                ctx.moveTo(headPt.x, headPt.y);
+                ctx.lineTo(shoulderPt.x, shoulderPt.y);
+                ctx.lineTo(hipPt.x, hipPt.y);
+                ctx.lineTo(kneePt.x, kneePt.y);
+                ctx.lineTo(footPt.x, footPt.y);
+                ctx.stroke();
+
+                // Vẽ bóng mờ khi gập bụng lên (<65 độ)
+                const upShoulderPt = { x: mapX(0.45), y: h * 0.52 };
+                ctx.strokeStyle = 'rgba(34, 197, 94, 0.35)';
+                ctx.lineWidth = 10;
+                ctx.setLineDash([8, 6]);
+                ctx.beginPath();
+                ctx.moveTo(hipPt.x, hipPt.y);
+                ctx.lineTo(upShoulderPt.x, upShoulderPt.y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // 3 Vòng tròn định vị khớp chính
+                drawTargetZoneCircle(shoulderPt.x, shoulderPt.y, '1. VAI & ĐẦU (Nằm ngửa)', '#38bdf8');
+                drawTargetZoneCircle(hipPt.x, hipPt.y, '2. TÂM HÔNG (Giữa khung)', '#facc15');
+                drawTargetZoneCircle(kneePt.x, kneePt.y, '3. ĐẦU GỐI GẬP', '#4ade80');
+            } 
+            else if (currentExercise === 'pushup') {
+                // Bóng mờ tư thế Nằm sấp chống đẩy
+                const headPt     = { x: mapX(0.24), y: h * 0.48 };
+                const shoulderPt = { x: mapX(0.32), y: h * 0.52 };
+                const wristPt    = { x: mapX(0.31), y: h * 0.74 };
+                const hipPt      = { x: mapX(0.55), y: h * 0.62 };
+                const anklePt    = { x: mapX(0.77), y: h * 0.73 };
+
+                ctx.strokeStyle = 'rgba(250, 204, 21, 0.45)';
+                ctx.lineWidth = 14;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.beginPath();
+                ctx.moveTo(headPt.x, headPt.y);
+                ctx.lineTo(shoulderPt.x, shoulderPt.y);
+                ctx.lineTo(hipPt.x, hipPt.y);
+                ctx.lineTo(anklePt.x, anklePt.y);
+                ctx.stroke();
+
+                // Tay chống thẳng
+                ctx.beginPath();
+                ctx.moveTo(shoulderPt.x, shoulderPt.y);
+                ctx.lineTo(wristPt.x, wristPt.y);
+                ctx.stroke();
+
+                drawTargetZoneCircle(wristPt.x, wristPt.y, '1. BÀN TAY CHỐNG SÀN', '#38bdf8');
+                drawTargetZoneCircle(shoulderPt.x, shoulderPt.y, '2. VAI & KHUỶU TAY', '#facc15');
+                drawTargetZoneCircle(anklePt.x, anklePt.y, '3. MŨI CHÂN TỲ SÀN', '#4ade80');
+            }
+
+            ctx.restore();
+        }
+
+        function drawTargetZoneCircle(x, y, label, color) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, 22, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+            ctx.fill();
+            ctx.lineWidth = 2.5;
+            ctx.strokeStyle = color;
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+            ctx.beginPath();
+            ctx.roundRect(x - 75, y + 26, 150, 22, 6);
+            ctx.fill();
+
+            ctx.fillStyle = color;
+            ctx.font = 'bold 11px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, x, y + 41);
+            ctx.restore();
+        }
+
+        // 6B. VẼ MODULE BẬT XA TẠI CHỖ: VỊ TRÍ BẮT ĐẦU - THƯỚC ĐO KHOẢNG CÁCH - VỊ TRÍ RƠI XUỐNG
+        function drawStandingLongJumpRuler(w, h) {
+            if (currentExercise !== 'jump') return;
+
+            const startX = jumpCalib.startLineX * w;
+            const refX   = jumpCalib.refLineX * w;
+            const floorY = h * 0.76;
+
+            ctx.save();
+
+            // 1. Vẽ mặt thảm thước đo khoảng cách
+            const leftEdge = Math.min(startX, refX);
+            const rulerWidth = Math.abs(refX - startX);
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.16)';
+            ctx.fillRect(leftEdge, floorY - 18, rulerWidth, 44);
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(leftEdge, floorY - 18, rulerWidth, 44);
+
+            // 2. Vẽ các vạch chia thước đo (mỗi 10cm và 25cm)
+            const stepCm = 25;
+            const numTicks = Math.floor(jumpCalib.realDistCm / stepCm);
+            for (let i = 0; i <= numTicks; i++) {
+                const cmVal = i * stepCm;
+                const ratio = cmVal / jumpCalib.realDistCm;
+                const tx = startX + ratio * (refX - startX);
+
+                const isMajor = (cmVal % 50 === 0);
+                ctx.strokeStyle = isMajor ? '#f8fafc' : 'rgba(255,255,255,0.45)';
+                ctx.lineWidth = isMajor ? 2.5 : 1.5;
+                ctx.beginPath();
+                ctx.moveTo(tx, floorY - (isMajor ? 14 : 6));
+                ctx.lineTo(tx, floorY + (isMajor ? 18 : 10));
+                ctx.stroke();
+
+                ctx.fillStyle = isMajor ? '#ffffff' : '#94a3b8';
+                ctx.font = isMajor ? 'bold 13px "JetBrains Mono", monospace' : '11px "JetBrains Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${cmVal}`, tx, floorY + 38);
+            }
+
+            // 3. Vẽ VỊ TRÍ BẮT ĐẦU BẬT NHẢY (Vạch Xuất Phát 0cm - Màu Vàng) + Bóng người chuẩn bị nhảy
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(startX, floorY - 170);
+            ctx.lineTo(startX, floorY + 30);
+            ctx.stroke();
+
+            // Tay nắm kéo Vạch bắt đầu
+            ctx.fillStyle = '#facc15';
+            ctx.beginPath();
+            ctx.roundRect(startX - 95, floorY - 205, 190, 32, 8);
+            ctx.fill();
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 12px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('🚩 VỊ TRÍ BẮT ĐẦU NHẢY (0cm)', startX, floorY - 184);
+
+            // Vẽ bóng mờ tư thế đứng khuỵu gối chuẩn bị bật nhảy ngay sau vạch xuất phát
+            if (document.getElementById('guide-frame-toggle').checked) {
+                const dirSign = Math.sign(refX - startX) || 1;
+                const toeX = startX - dirSign * 8;
+                ctx.strokeStyle = 'rgba(250, 204, 21, 0.40)';
+                ctx.lineWidth = 10;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.beginPath();
+                ctx.moveTo(toeX, floorY - 4); // Bàn chân
+                ctx.lineTo(toeX + dirSign * 14, floorY - 55); // Đầu gối khuỵu
+                ctx.lineTo(toeX - dirSign * 18, floorY - 105); // Hông
+                ctx.lineTo(toeX + dirSign * 10, floorY - 160); // Vai
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(toeX + dirSign * 16, floorY - 178, 12, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(250, 204, 21, 0.40)';
+                ctx.fill();
+            }
+
+            // 4. Vẽ VẠCH MỐC CHUẨN (VD: 250cm - Màu Xanh Dương)
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(refX, floorY - 140);
+            ctx.lineTo(refX, floorY + 30);
+            ctx.stroke();
+
+            ctx.fillStyle = '#0284c7';
+            ctx.beginPath();
+            ctx.roundRect(refX - 80, floorY - 172, 160, 28, 8);
+            ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`📏 MỐC THƯỚC (${jumpCalib.realDistCm}cm)`, refX, floorY - 153);
+
+            // 5. Vẽ VỊ TRÍ RƠI XUỐNG / TIẾP ĐẤT (Màu Xanh Lá) & Đường quỹ đạo đo khoảng cách
+            if (jumpCalib.landingX !== null && counter > 0) {
+                const landPx = jumpCalib.landingX * w;
+
+                // Tô màu vùng khoảng cách đạt được từ Vạch bắt đầu -> Vị trí rơi xuống
+                ctx.fillStyle = 'rgba(34, 197, 94, 0.28)';
+                ctx.fillRect(Math.min(startX, landPx), floorY - 16, Math.abs(landPx - startX), 40);
+
+                // Đường cong quỹ đạo nhảy từ Vạch bắt đầu tới Vị trí rơi xuống
+                const midX = (startX + landPx) / 2;
+                const arcTopY = floorY - 150;
+                ctx.strokeStyle = '#4ade80';
+                ctx.lineWidth = 3.5;
+                ctx.setLineDash([8, 6]);
+                ctx.beginPath();
+                ctx.moveTo(startX, floorY - 10);
+                ctx.quadraticCurveTo(midX, arcTopY, landPx, floorY - 10);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Vạch đứng tại Vị trí rơi xuống
+                ctx.strokeStyle = '#22c55e';
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(landPx, floorY - 175);
+                ctx.lineTo(landPx, floorY + 30);
+                ctx.stroke();
+
+                // Điểm tròn đánh dấu đúng gót chân chạm đất
+                ctx.beginPath();
+                ctx.arc(landPx, floorY, 10, 0, Math.PI * 2);
+                ctx.fillStyle = '#22c55e';
+                ctx.fill();
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+
+                // Bảng nhãn Vị trí rơi xuống
+                ctx.fillStyle = '#16a34a';
+                ctx.beginPath();
+                ctx.roundRect(landPx - 95, floorY - 210, 190, 34, 8);
+                ctx.fill();
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '800 13px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(`🎯 VỊ TRÍ RƠI: ${counter} CM`, landPx, floorY - 188);
+
+                // Thanh mũi tên đo khoảng cách giữa Vạch bắt đầu và Vị trí rơi
+                const measureY = floorY - 52;
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(startX, measureY);
+                ctx.lineTo(landPx, measureY);
+                ctx.stroke();
+
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+                ctx.strokeStyle = '#22c55e';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(midX - 75, measureY - 16, 150, 30, 8);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#4ade80';
+                ctx.font = '800 15px "JetBrains Mono", monospace';
+                ctx.fillText(`↔ ${counter} cm`, midX, measureY + 4);
+            }
+
+            ctx.textAlign = 'left';
+            ctx.restore();
+        }
+
+        // ============================================================================
+        // 7. VẼ KHUNG XƯƠNG & GIAO DIỆN HUD OPENCV LÊN CANVAS
+        // ============================================================================
+        function drawCustomSkeleton(landmarks, w, h) {
+            if (!landmarks) return;
+            const pairs = [
+                [11, 13], [13, 15], [11, 23], [23, 25], [25, 27], [27, 29], [29, 31], [0, 11]
+            ];
+
+            ctx.save();
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = '#ec4899';
+            pairs.forEach(([i, j]) => {
+                const a = landmarks[i];
+                const b = landmarks[j];
+                if (a && b) {
+                    ctx.beginPath();
+                    ctx.moveTo(a.x * w, a.y * h);
+                    ctx.lineTo(b.x * w, b.y * h);
+                    ctx.stroke();
+                }
+            });
+
+            [0, 11, 13, 15, 23, 25, 27, 29].forEach(idx => {
+                const pt = landmarks[idx];
+                if (!pt) return;
+                ctx.beginPath();
+                ctx.arc(pt.x * w, pt.y * h, 7, 0, Math.PI * 2);
+                ctx.fillStyle = '#f97316';
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+            });
+
+            let pivot = landmarks[23];
+            if (currentExercise === 'pushup') pivot = landmarks[13];
+            if (currentExercise === 'jump') pivot = landmarks[29] || landmarks[27];
+
+            if (pivot) {
+                const px = pivot.x * w;
+                const py = pivot.y * h;
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(px + 12, py - 32, 92, 30, 6);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = 'bold 15px "JetBrains Mono", monospace';
+                const labelTxt = currentExercise === 'jump'
+                    ? `${jumpCalib.liveFootCm}cm`
+                    : `${Math.round(currentAngle)}°`;
+                ctx.fillText(labelTxt, px + 20, py - 11);
+            }
+            ctx.restore();
+        }
+
+        function drawOpenCVHudOverlay(w, h) {
+            ctx.save();
+
+            // 1. BẢNG THÔNG TIN THÍ SINH & ĐIỂM SỐ
+            ctx.fillStyle = 'rgba(20, 24, 33, 0.90)';
+            ctx.strokeStyle = '#00c8ff';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.roundRect(20, 20, 560, 145, 12);
+            ctx.fill();
+            ctx.stroke();
+
+            const genderLabel = student.gender === 'Nam' ? 'Nam' : 'Nữ';
+            ctx.fillStyle = '#00ffff';
+            ctx.font = 'bold 17px Inter, sans-serif';
+            ctx.fillText(`TS: ${student.name} | Lớp: ${student.class} | ${genderLabel} - ${student.age}t`, 36, 48);
+
+            ctx.fillStyle = '#b4b4b4';
+            ctx.font = 'bold 15px Inter, sans-serif';
+            ctx.fillText(currentExercise === 'jump' ? 'BẬT XA (CM)' : 'ĐIỂM SỐ', 36, 78);
+
+            ctx.fillStyle = '#00ff44';
+            ctx.font = '800 54px "JetBrains Mono", monospace';
+            ctx.fillText(String(counter), 36, 132);
+
+            ctx.fillStyle = '#b4b4b4';
+            ctx.font = 'bold 15px Inter, sans-serif';
+            ctx.fillText('THỜI GIAN', 235, 78);
+
+            ctx.fillStyle = remainingTime <= 5 ? '#ff3333' : '#ffff00';
+            ctx.font = '800 50px "JetBrains Mono", monospace';
+            ctx.fillText(`${remainingTime}s`, 235, 132);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '600 14px Inter, sans-serif';
+            ctx.fillText(`Góc: ${Math.round(currentAngle)}° | ${feedback}`, 36, 154);
+
+            // 2. THANH TIẾN TRÌNH %
+            const barTop = 200;
+            const barBottom = 500;
+            const barHeight = barBottom - barTop;
+            const fillH = Math.max(0, Math.min(100, progressBar)) / 100 * barHeight;
+            const barY = barBottom - fillH;
+
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+            ctx.fillRect(w - 64, barTop, 32, barHeight);
+            ctx.fillStyle = '#00ff44';
+            ctx.fillRect(w - 64, barY, 32, fillH);
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(w - 64, barTop, 32, barHeight);
+
+            ctx.fillStyle = '#00ff44';
+            ctx.font = 'bold 16px "JetBrains Mono", monospace';
+            ctx.fillText(`${Math.round(progressBar)}%`, w - 72, 530);
+
+            // 3. HỘP HƯỚNG DẪN HOẶC KẾT THÚC
+            if (!isRunning && !isFinished) {
+                const boxH = 115;
+                ctx.fillStyle = 'rgba(15, 20, 28, 0.88)';
+                ctx.strokeStyle = '#00ffff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(20, h - boxH - 14, w - 40, boxH, 12);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#00ffff';
+                ctx.font = 'bold 17px Inter, sans-serif';
+                ctx.fillText(`--- ĐIỀU KHIỂN THI ĐẤU: ${EXERCISE_CONFIGS[currentExercise].name.toUpperCase()} (CHUẨN BỘ GD&ĐT) ---`, 38, h - boxH + 14);
+
+                ctx.fillStyle = '#e2e8f0';
+                ctx.font = '14px Inter, sans-serif';
+                ctx.fillText(EXERCISE_CONFIGS[currentExercise].guide, 38, h - boxH + 44);
+
+                ctx.fillStyle = '#ffa500';
+                ctx.font = 'bold 16px Inter, sans-serif';
+                ctx.fillText(`>>> CHẠM NÚT 'BẮT ĐẦU' HOẶC NHẤN PHÍM 'S' ĐỂ TÍNH GIỜ (${totalTime}S) | KÉO CÁC VẠCH TRÊN MÀN HÌNH ĐỂ CĂN CHỈNH <<<`, 38, h - boxH + 76);
+            } else if (isFinished) {
+                const evalResult = evaluatePerformance(currentExercise, student.gender, student.age, counter);
+                const unitLabel = EXERCISE_CONFIGS[currentExercise].unit.toUpperCase();
+
+                ctx.fillStyle = 'rgba(10, 14, 23, 0.95)';
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 3.5;
+                ctx.beginPath();
+                ctx.roundRect(w / 2 - 340, h / 2 - 110, 680, 220, 16);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#ff4444';
+                ctx.font = '800 30px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(`HOÀN THÀNH BÀI THI (${totalTime}s)!`, w / 2, h / 2 - 52);
+
+                ctx.fillStyle = '#00ff44';
+                ctx.font = '800 34px Inter, sans-serif';
+                ctx.fillText(`KẾT QUẢ: ${counter} ${unitLabel} - XẾP LOẠI: ${evalResult.toUpperCase()}`, w / 2, h / 2 + 2);
+
+                ctx.fillStyle = '#00ffff';
+                ctx.font = 'bold 18px Inter, sans-serif';
+                ctx.fillText('ĐÃ TỰ ĐỘNG LƯU VÀO BẢNG EXCEL (CHUẨN QĐ 53/2008)', w / 2, h / 2 + 45);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '16px Inter, sans-serif';
+                ctx.fillText("Chạm nút 'Đổi thí sinh [N]' cho lượt tiếp theo | 'Thi lại [R]' để đo lại", w / 2, h / 2 + 82);
+                ctx.textAlign = 'left';
+            }
+
+            ctx.restore();
+        }
+
+        // ============================================================================
+        // 8. BỘ MÔ PHỎNG TƯ THẾ AI (KHI NGƯỜI DÙNG CHỌN CHẾ ĐỘ DEMO)
         // ============================================================================
         function generateSimulatedLandmarks() {
             const lm = Array.from({ length: 33 }, () => ({ x: 0.5, y: 0.5, z: 0, visibility: 0.99 }));
             const autoCycle = document.getElementById('sim-auto-cycle').checked;
             const sliderEl = document.getElementById('sim-angle-slider');
-            const flipX = (xVal) => guideHeadOnLeft ? xVal : (1.0 - xVal);
+            const isLeftToRight = (poseDirection === 'left-to-right');
+            const mapNormX = (nx) => isLeftToRight ? nx : (1 - nx);
 
             if (currentExercise === 'situp') {
                 let targetAngle = parseFloat(sliderEl.value);
                 if (autoCycle && isRunning && !isFinished) {
                     simTime += 0.065;
-                    // Dao động từ 55 độ (gập lên) đến 145 độ (nằm xuống)
                     targetAngle = 100 + 48 * Math.cos(simTime);
                     sliderEl.value = Math.round(targetAngle);
                     document.getElementById('sim-slider-val').innerText = Math.round(targetAngle) + '°';
                 }
 
-                // Hông cố định trên sàn
-                const hip = { x: 0.48, y: 0.72 };
-                const knee = { x: 0.66, y: 0.56 };
-                const ankle = { x: 0.78, y: 0.73 };
+                const hip = { x: mapNormX(0.50), y: 0.73 };
+                const knee = { x: mapNormX(0.66), y: 0.56 };
+                const ankle = { x: mapNormX(0.77), y: 0.74 };
 
-                // Tính vị trí vai dựa trên góc gập bụng
                 const kneeAngleRad = Math.atan2(knee.y - hip.y, knee.x - hip.x);
-                const shoulderAngleRad = kneeAngleRad - (targetAngle * Math.PI / 180);
-                const torsoLen = 0.24;
+                const dirFactor = isLeftToRight ? -1 : 1;
+                const shoulderAngleRad = kneeAngleRad + dirFactor * (targetAngle * Math.PI / 180);
+                const torsoLen = 0.22;
                 const shoulder = {
                     x: hip.x + torsoLen * Math.cos(shoulderAngleRad),
                     y: hip.y + torsoLen * Math.sin(shoulderAngleRad)
                 };
                 const head = {
-                    x: shoulder.x + 0.08 * Math.cos(shoulderAngleRad - 0.15),
-                    y: shoulder.y + 0.08 * Math.sin(shoulderAngleRad - 0.15)
+                    x: shoulder.x + 0.07 * Math.cos(shoulderAngleRad),
+                    y: shoulder.y + 0.07 * Math.sin(shoulderAngleRad)
                 };
 
-                lm[0] = { x: flipX(head.x), y: head.y, visibility: 0.99 };
-                lm[11] = lm[12] = { x: flipX(shoulder.x), y: shoulder.y, visibility: 0.99 };
-                lm[13] = lm[14] = { x: flipX(shoulder.x + 0.06), y: shoulder.y - 0.06, visibility: 0.99 };
-                lm[15] = lm[16] = { x: flipX(head.x), y: head.y, visibility: 0.99 };
-                lm[23] = lm[24] = { x: flipX(hip.x), y: hip.y, visibility: 0.99 };
-                lm[25] = lm[26] = { x: flipX(knee.x), y: knee.y, visibility: 0.99 };
-                lm[27] = lm[28] = { x: flipX(ankle.x), y: ankle.y, visibility: 0.99 };
-                lm[29] = lm[30] = { x: flipX(ankle.x + 0.02), y: ankle.y + 0.02, visibility: 0.99 };
+                lm[0] = { ...head, visibility: 0.99 };
+                lm[11] = lm[12] = { ...shoulder, visibility: 0.99 };
+                lm[13] = lm[14] = { x: shoulder.x, y: shoulder.y - 0.05, visibility: 0.99 };
+                lm[15] = lm[16] = { x: head.x, y: head.y, visibility: 0.99 };
+                lm[23] = lm[24] = { ...hip, visibility: 0.99 };
+                lm[25] = lm[26] = { ...knee, visibility: 0.99 };
+                lm[27] = lm[28] = { ...ankle, visibility: 0.99 };
+                lm[29] = lm[30] = { ...ankle, visibility: 0.99 };
             } 
             else if (currentExercise === 'pushup') {
                 let targetElbowAngle = parseFloat(sliderEl.value);
@@ -849,27 +1493,27 @@
                     document.getElementById('sim-slider-val').innerText = Math.round(targetElbowAngle) + '°';
                 }
 
-                // Bàn tay chống sàn và mũi chân cố định
-                const wrist = { x: 0.30, y: 0.75 };
-                const ankle = { x: 0.78, y: 0.74 };
+                const wrist = { x: mapNormX(0.31), y: 0.74 };
+                const ankle = { x: mapNormX(0.77), y: 0.73 };
                 const dropFactor = interp(targetElbowAngle, 80, 170, 0.14, 0.0);
 
-                const shoulder = { x: 0.32, y: 0.52 + dropFactor };
-                const elbow = { x: 0.26, y: 0.64 + dropFactor * 0.5 };
-                const hip = { x: 0.56, y: 0.63 + dropFactor * 0.6 };
-                const knee = { x: 0.68, y: 0.69 + dropFactor * 0.3 };
-                const head = { x: 0.23, y: shoulder.y - 0.03 };
+                const shoulder = { x: mapNormX(0.32), y: 0.52 + dropFactor };
+                const elbow = { x: mapNormX(0.27), y: 0.63 + dropFactor * 0.5 };
+                const hip = { x: mapNormX(0.55), y: 0.62 + dropFactor * 0.6 };
+                const knee = { x: mapNormX(0.67), y: 0.68 + dropFactor * 0.3 };
+                const head = { x: mapNormX(0.24), y: shoulder.y - 0.03 };
 
-                lm[0] = { x: flipX(head.x), y: head.y, visibility: 0.99 };
-                lm[11] = lm[12] = { x: flipX(shoulder.x), y: shoulder.y, visibility: 0.99 };
-                lm[13] = lm[14] = { x: flipX(elbow.x), y: elbow.y, visibility: 0.99 };
-                lm[15] = lm[16] = { x: flipX(wrist.x), y: wrist.y, visibility: 0.99 };
-                lm[23] = lm[24] = { x: flipX(hip.x), y: hip.y, visibility: 0.99 };
-                lm[25] = lm[26] = { x: flipX(knee.x), y: knee.y, visibility: 0.99 };
-                lm[27] = lm[28] = { x: flipX(ankle.x), y: ankle.y, visibility: 0.99 };
+                lm[0] = { ...head, visibility: 0.99 };
+                lm[11] = lm[12] = { ...shoulder, visibility: 0.99 };
+                lm[13] = lm[14] = { ...elbow, visibility: 0.99 };
+                lm[15] = lm[16] = { ...wrist, visibility: 0.99 };
+                lm[23] = lm[24] = { ...hip, visibility: 0.99 };
+                lm[25] = lm[26] = { ...knee, visibility: 0.99 };
+                lm[27] = lm[28] = { ...ankle, visibility: 0.99 };
+                lm[29] = lm[30] = { ...ankle, visibility: 0.99 };
             } 
             else if (currentExercise === 'jump') {
-                const pixelSpan = Math.abs(jumpCalib.refLineX - jumpCalib.startLineX);
+                const pixelSpan = jumpCalib.refLineX - jumpCalib.startLineX;
                 let jumperX = jumpCalib.startLineX;
                 let jumperYOffset = 0;
                 let kneeBend = 0;
@@ -883,9 +1527,9 @@
                     const p = simJumpAnim.progress;
                     const targetNormSpan = (simJumpAnim.targetCm / jumpCalib.realDistCm) * pixelSpan;
                     jumperX = jumpCalib.startLineX + targetNormSpan * p;
-                    jumperYOffset = -0.22 * Math.sin(p * Math.PI); // Parabolic arc
+                    jumperYOffset = -0.22 * Math.sin(p * Math.PI);
                     kneeBend = Math.sin(p * Math.PI) * 0.05;
-                } else if (jumpCalib.landingX && counter > 0) {
+                } else if (jumpCalib.landingX !== null && counter > 0) {
                     jumperX = jumpCalib.landingX;
                 }
 
@@ -916,7 +1560,7 @@
             if (!isRunning) {
                 startExam();
             }
-            const targetCm = parseInt(document.getElementById('sim-jump-slider').value) || 210;
+            const targetCm = parseInt(document.getElementById('sim-jump-slider').value) || 215;
             simJumpAnim = { active: true, progress: 0, targetCm };
         }
 
@@ -927,514 +1571,7 @@
         }
 
         // ============================================================================
-        // 7. VẼ GIAO DIỆN HUD & KHUNG CĂN CHỈNH VỊ TRÍ NGƯỜI TẬP LÊN CANVAS
-        // ============================================================================
-        const canvasEl = document.getElementById('output-canvas');
-        const ctx = canvasEl.getContext('2d');
-
-        // Kiểm tra người tập đã nằm vào đúng vùng khung căn chỉnh chưa
-        function checkPersonAlignment(landmarks) {
-            if (!landmarks || landmarks.length < 29) return false;
-            const visLeft = (landmarks[23]?.visibility || 0) + (landmarks[11]?.visibility || 0);
-            const visRight = (landmarks[24]?.visibility || 0) + (landmarks[12]?.visibility || 0);
-            const useLeft = visLeft >= visRight;
-
-            const shoulder = useLeft ? landmarks[11] : landmarks[12];
-            const hip      = useLeft ? landmarks[23] : landmarks[24];
-            const legPoint = currentExercise === 'situp'
-                ? (useLeft ? landmarks[25] : landmarks[26]) // Đầu gối cho gập bụng
-                : (useLeft ? landmarks[27] : landmarks[28]); // Cổ chân cho chống đẩy
-
-            if (!shoulder || !hip || !legPoint) return false;
-            if ((shoulder.visibility || 0) < 0.35 || (hip.visibility || 0) < 0.35) return false;
-
-            const inBox = (pt) => pt.x >= 0.14 && pt.x <= 0.88 && pt.y >= 0.30 && pt.y <= 0.86;
-            return inBox(shoulder) && inBox(hip) && inBox(legPoint);
-        }
-
-        // Vẽ Khung căn chỉnh vị trí người nằm Gập bụng & Nằm sấp chống đẩy
-        function drawPositioningGuide(w, h, landmarks) {
-            const guideCheckbox = document.getElementById('guide-toggle');
-            if (!guideCheckbox || !guideCheckbox.checked) return;
-            if (currentExercise !== 'situp' && currentExercise !== 'pushup') return;
-
-            isPersonInFrame = checkPersonAlignment(landmarks);
-            const mainColor = isPersonInFrame ? '#22c55e' : '#facc15'; // Xanh lá khi chuẩn, Vàng khi đang căn chỉnh
-            const bgTint = isPersonInFrame ? 'rgba(34, 197, 94, 0.06)' : 'rgba(250, 204, 21, 0.06)';
-
-            const boxX = w * 0.16;
-            const boxY = h * 0.36;
-            const boxW = w * 0.68;
-            const boxH = h * 0.44;
-            const floorY = h * 0.75;
-
-            const mapX = (normX) => (guideHeadOnLeft ? normX : (1.0 - normX)) * w;
-            const mapY = (normY) => normY * h;
-
-            ctx.save();
-
-            // 1. Nền vùng căn chỉnh & Khung viền nét đứt
-            ctx.fillStyle = bgTint;
-            ctx.fillRect(boxX, boxY, boxW, boxH);
-
-            ctx.strokeStyle = isPersonInFrame ? 'rgba(34, 197, 94, 0.45)' : 'rgba(250, 204, 21, 0.45)';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([10, 8]);
-            ctx.strokeRect(boxX, boxY, boxW, boxH);
-            ctx.setLineDash([]);
-
-            // 2. Bốn góc chữ L định vị Camera (Corner L-Brackets)
-            const cornerLen = 28;
-            ctx.strokeStyle = mainColor;
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            // Top-Left
-            ctx.moveTo(boxX, boxY + cornerLen); ctx.lineTo(boxX, boxY); ctx.lineTo(boxX + cornerLen, boxY);
-            // Top-Right
-            ctx.moveTo(boxX + boxW - cornerLen, boxY); ctx.lineTo(boxX + boxW, boxY); ctx.lineTo(boxX + boxW, boxY + cornerLen);
-            // Bottom-Left
-            ctx.moveTo(boxX, boxY + boxH - cornerLen); ctx.lineTo(boxX, boxY + boxH); ctx.lineTo(boxX + cornerLen, boxY + boxH);
-            // Bottom-Right
-            ctx.moveTo(boxX + boxW - cornerLen, boxY + boxH); ctx.lineTo(boxX + boxW, boxY + boxH); ctx.lineTo(boxX + boxW, boxY + boxH - cornerLen);
-            ctx.stroke();
-
-            // 3. Thanh trạng thái căn chỉnh phía trên khung
-            const bannerW = 540;
-            const bannerH = 30;
-            const bannerX = boxX + (boxW - bannerW) / 2;
-            const bannerY = boxY - 16;
-
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
-            ctx.strokeStyle = mainColor;
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.roundRect(bannerX, bannerY, bannerW, bannerH, 8);
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.fillStyle = mainColor;
-            ctx.font = 'bold 13px Inter, sans-serif';
-            ctx.textAlign = 'center';
-            const statusMsg = isPersonInFrame
-                ? `✅ VỊ TRÍ CAMERA CHUẨN (${EXERCISE_CONFIGS[currentExercise].shortName.toUpperCase()}) - SẴN SÀNG BẤM [S]!`
-                : `🎯 ĐƯA CAMERA VÀO KHUNG NGƯỜI ${currentExercise === 'situp' ? 'NẰM NGỬA GẬP BỤNG' : 'NẰM SẤP CHỐNG ĐẨY'}`;
-            ctx.fillText(statusMsg, boxX + boxW / 2, bannerY + 20);
-
-            // 4. Vạch mặt sàn / thảm tập (Floor Baseline)
-            ctx.strokeStyle = 'rgba(56, 189, 248, 0.65)';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(boxX + 20, floorY);
-            ctx.lineTo(boxX + boxW - 20, floorY);
-            ctx.stroke();
-
-            ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 12px Inter, sans-serif';
-            ctx.fillText('▲ MẶT THẢM / SÀN NẰM (Đặt Camera ngang tầm hông, cách 2.0 - 2.5m) ▲', boxX + boxW / 2, floorY + 20);
-
-            // 5. Vẽ bóng mờ tư thế chuẩn (Ghost Silhouette) & 3 Vòng tròn định vị khớp
-            if (currentExercise === 'situp') {
-                // Tọa độ mẫu tư thế nằm ngửa chuẩn bị gập bụng (Góc > 130 độ)
-                const pts = {
-                    head:     { x: mapX(0.24), y: mapY(0.67) },
-                    shoulder: { x: mapX(0.31), y: mapY(0.71) },
-                    hip:      { x: mapX(0.49), y: mapY(0.73) },
-                    knee:     { x: mapX(0.66), y: mapY(0.56) },
-                    ankle:    { x: mapX(0.77), y: mapY(0.73) }
-                };
-
-                // Bóng mờ nét đứt của người nằm gập bụng
-                ctx.strokeStyle = isPersonInFrame ? 'rgba(34, 197, 94, 0.45)' : 'rgba(56, 189, 248, 0.55)';
-                ctx.lineWidth = 8;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.setLineDash([8, 8]);
-                ctx.beginPath();
-                ctx.moveTo(pts.head.x, pts.head.y);
-                ctx.lineTo(pts.shoulder.x, pts.shoulder.y);
-                ctx.lineTo(pts.hip.x, pts.hip.y);
-                ctx.lineTo(pts.knee.x, pts.knee.y);
-                ctx.lineTo(pts.ankle.x, pts.ankle.y);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                // Vòng đầu mẫu
-                ctx.beginPath();
-                ctx.arc(pts.head.x, pts.head.y - 6, 16, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.2)';
-                ctx.fill();
-                ctx.stroke();
-
-                // Mũi tên hướng dẫn hướng gập người lên
-                const arrowStartX = pts.shoulder.x;
-                const arrowStartY = pts.shoulder.y - 25;
-                const arrowEndX = pts.hip.x + (guideHeadOnLeft ? -20 : 20);
-                const arrowEndY = pts.knee.y - 25;
-
-                ctx.strokeStyle = '#facc15';
-                ctx.lineWidth = 2.5;
-                ctx.setLineDash([4, 4]);
-                ctx.beginPath();
-                ctx.moveTo(arrowStartX, arrowStartY);
-                ctx.quadraticCurveTo(arrowStartX, arrowEndY, arrowEndX, arrowEndY);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                ctx.fillStyle = '#facc15';
-                ctx.font = 'bold 12px Inter, sans-serif';
-                ctx.fillText('Hướng gập lên (<65°)', (arrowStartX + arrowEndX) / 2, arrowEndY - 8);
-
-                // 3 Điểm mốc giải phẫu cần đưa người vào
-                drawAnchorTarget(pts.shoulder.x, pts.shoulder.y, '1. VAI & ĐẦU (Nằm ngửa)', '#38bdf8');
-                drawAnchorTarget(pts.hip.x, pts.hip.y, '2. TÂM HÔNG (Giữa khung)', mainColor, true);
-                drawAnchorTarget(pts.knee.x, pts.knee.y, '3. GỐI GẬP & BÀN CHÂN', '#38bdf8');
-            } 
-            else if (currentExercise === 'pushup') {
-                // Tọa độ mẫu tư thế nằm sấp chống đẩy (Tay chống thẳng > 155 độ, lưng thẳng)
-                const pts = {
-                    head:     { x: mapX(0.23), y: mapY(0.49) },
-                    shoulder: { x: mapX(0.32), y: mapY(0.52) },
-                    elbow:    { x: mapX(0.31), y: mapY(0.64) },
-                    wrist:    { x: mapX(0.30), y: mapY(0.74) },
-                    hip:      { x: mapX(0.55), y: mapY(0.62) },
-                    knee:     { x: mapX(0.67), y: mapY(0.68) },
-                    ankle:    { x: mapX(0.78), y: mapY(0.74) }
-                };
-
-                // Bóng mờ nét đứt của người nằm sấp chống đẩy
-                ctx.strokeStyle = isPersonInFrame ? 'rgba(34, 197, 94, 0.45)' : 'rgba(56, 189, 248, 0.55)';
-                ctx.lineWidth = 8;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.setLineDash([8, 8]);
-                ctx.beginPath();
-                // Trục thân người (Đầu -> Vai -> Hông -> Gối -> Cổ chân)
-                ctx.moveTo(pts.head.x, pts.head.y);
-                ctx.lineTo(pts.shoulder.x, pts.shoulder.y);
-                ctx.lineTo(pts.hip.x, pts.hip.y);
-                ctx.lineTo(pts.knee.x, pts.knee.y);
-                ctx.lineTo(pts.ankle.x, pts.ankle.y);
-                // Trục cánh tay chống sàn (Vai -> Khuỷu tay -> Cổ tay)
-                ctx.moveTo(pts.shoulder.x, pts.shoulder.y);
-                ctx.lineTo(pts.elbow.x, pts.elbow.y);
-                ctx.lineTo(pts.wrist.x, pts.wrist.y);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                // Vòng đầu mẫu
-                ctx.beginPath();
-                ctx.arc(pts.head.x, pts.head.y, 16, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.2)';
-                ctx.fill();
-                ctx.stroke();
-
-                // Mũi tên hướng dẫn hạ ngực xuống
-                ctx.strokeStyle = '#facc15';
-                ctx.lineWidth = 2.5;
-                ctx.beginPath();
-                ctx.moveTo(pts.shoulder.x, pts.shoulder.y + 18);
-                ctx.lineTo(pts.shoulder.x, pts.shoulder.y + 58);
-                ctx.stroke();
-                ctx.fillStyle = '#facc15';
-                ctx.font = 'bold 12px Inter, sans-serif';
-                ctx.fillText('▼ Hạ khuỷu tay ≤95°', pts.shoulder.x, pts.shoulder.y - 24);
-
-                // 3 Điểm mốc giải phẫu cho Chống đẩy
-                drawAnchorTarget(pts.wrist.x, (pts.shoulder.y + pts.wrist.y) / 2, '1. TAY CHỐNG & VAI', '#38bdf8');
-                drawAnchorTarget(pts.hip.x, pts.hip.y, '2. LƯNG - HÔNG THẲNG', mainColor, true);
-                drawAnchorTarget(pts.ankle.x, pts.ankle.y, '3. MŨI CHÂN TỲ SÀN', '#38bdf8');
-            }
-
-            ctx.textAlign = 'left';
-            ctx.restore();
-        }
-
-        // Hàm phụ vẽ vòng tròn tâm ngắm (Bullseye Anchor) tại từng vị trí khớp mẫu
-        function drawAnchorTarget(x, y, label, color, isCenter = false) {
-            ctx.save();
-            const radius = isCenter ? 26 : 20;
-
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 2;
-            ctx.setLineDash([4, 3]);
-            ctx.beginPath();
-            ctx.arc(x, y, radius, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // Dấu cộng tâm ngắm
-            ctx.beginPath();
-            ctx.moveTo(x - 8, y); ctx.lineTo(x + 8, y);
-            ctx.moveTo(x, y - 8); ctx.lineTo(x, y + 8);
-            ctx.stroke();
-
-            // Nhãn chú thích
-            ctx.font = 'bold 11px Inter, sans-serif';
-            const textW = ctx.measureText(label).width + 14;
-            const pillY = y - radius - 26;
-
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.roundRect(x - textW / 2, pillY, textW, 20, 6);
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.fillStyle = '#ffffff';
-            ctx.textAlign = 'center';
-            ctx.fillText(label, x, pillY + 14);
-            ctx.restore();
-        }
-
-        function drawCustomSkeleton(landmarks, w, h) {
-            if (!landmarks) return;
-            const pairs = [
-                [11, 13], [13, 15], [11, 23], [23, 25], [25, 27], [27, 29], [29, 31], [0, 11]
-            ];
-
-            ctx.save();
-            ctx.lineWidth = 5;
-            ctx.strokeStyle = '#ec4899'; // Màu hồng giống mp_drawing (245, 66, 230)
-            pairs.forEach(([i, j]) => {
-                const a = landmarks[i];
-                const b = landmarks[j];
-                if (a && b) {
-                    ctx.beginPath();
-                    ctx.moveTo(a.x * w, a.y * h);
-                    ctx.lineTo(b.x * w, b.y * h);
-                    ctx.stroke();
-                }
-            });
-
-            // Vẽ các khớp xương màu cam/xanh
-            [0, 11, 13, 15, 23, 25, 27, 29].forEach(idx => {
-                const pt = landmarks[idx];
-                if (!pt) return;
-                ctx.beginPath();
-                ctx.arc(pt.x * w, pt.y * h, 7, 0, Math.PI * 2);
-                ctx.fillStyle = '#f97316';
-                ctx.fill();
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = '#ffffff';
-                ctx.stroke();
-            });
-
-            // Hiển thị nhãn góc ngay tại khớp trọng tâm
-            let pivot = landmarks[23]; // Hông cho gập bụng
-            if (currentExercise === 'pushup') pivot = landmarks[13]; // Khuỷu tay cho chống đẩy
-            if (currentExercise === 'jump') pivot = landmarks[25];   // Đầu gối cho bật xa
-
-            if (pivot) {
-                const px = pivot.x * w;
-                const py = pivot.y * h;
-                ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-                ctx.strokeStyle = '#38bdf8';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.roundRect(px + 12, py - 32, 74, 30, 6);
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.fillStyle = '#38bdf8';
-                ctx.font = 'bold 16px "JetBrains Mono", monospace';
-                ctx.fillText(`${Math.round(currentAngle)}°`, px + 24, py - 11);
-            }
-            ctx.restore();
-        }
-
-        function drawStandingLongJumpRuler(w, h) {
-            if (currentExercise !== 'jump') return;
-            const startX = jumpCalib.startLineX * w;
-            const refX = jumpCalib.refLineX * w;
-            const floorY = h * 0.76;
-
-            ctx.save();
-            // Thảm đo bật xa
-            ctx.fillStyle = 'rgba(16, 185, 129, 0.12)';
-            ctx.fillRect(startX, floorY - 15, refX - startX, 38);
-
-            // Vạch chia mỗi 50cm
-            const numTicks = Math.floor(jumpCalib.realDistCm / 25);
-            for (let i = 0; i <= numTicks; i++) {
-                const cmVal = i * 25;
-                const ratio = cmVal / jumpCalib.realDistCm;
-                const tx = startX + ratio * (refX - startX);
-                ctx.strokeStyle = i % 2 === 0 ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.25)';
-                ctx.lineWidth = i % 2 === 0 ? 2 : 1;
-                ctx.beginPath();
-                ctx.moveTo(tx, floorY - 10);
-                ctx.lineTo(tx, floorY + 15);
-                ctx.stroke();
-
-                if (i % 2 === 0) {
-                    ctx.fillStyle = '#cbd5e1';
-                    ctx.font = 'bold 12px Inter, sans-serif';
-                    ctx.fillText(`${cmVal}cm`, tx - 16, floorY + 32);
-                }
-            }
-
-            // Vạch xuất phát (0 cm)
-            ctx.strokeStyle = '#facc15';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(startX, floorY - 90);
-            ctx.lineTo(startX, floorY + 25);
-            ctx.stroke();
-            ctx.fillStyle = '#facc15';
-            ctx.font = 'bold 13px Inter, sans-serif';
-            ctx.fillText('VẠCH XUẤT PHÁT (0cm)', startX - 65, floorY - 98);
-
-            // Vạch mốc chuẩn
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(refX, floorY - 90);
-            ctx.lineTo(refX, floorY + 25);
-            ctx.stroke();
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillText(`MỐC CHUẨN (${jumpCalib.realDistCm}cm)`, refX - 65, floorY - 98);
-
-            // Vạch tiếp đất của thí sinh
-            if (jumpCalib.landingX && counter > 0) {
-                const landPx = jumpCalib.landingX * w;
-                ctx.strokeStyle = '#22c55e';
-                ctx.lineWidth = 4;
-                ctx.setLineDash([6, 4]);
-                ctx.beginPath();
-                ctx.moveTo(landPx, floorY - 120);
-                ctx.lineTo(landPx, floorY + 25);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                ctx.fillStyle = '#22c55e';
-                ctx.font = 'bold 15px Inter, sans-serif';
-                ctx.fillText(`TIẾP ĐẤT: ${counter} cm`, landPx - 55, floorY - 128);
-            }
-            ctx.restore();
-        }
-
-        function drawOpenCVHudOverlay(w, h) {
-            ctx.save();
-
-            // 1. BẢNG THÔNG TIN THÍ SINH & ĐIỂM SỐ (Góc trên bên trái giống hệt Gap_bung.py)
-            ctx.fillStyle = 'rgba(20, 24, 33, 0.90)';
-            ctx.strokeStyle = '#00c8ff';
-            ctx.lineWidth = 2.5;
-            ctx.beginPath();
-            ctx.roundRect(20, 20, 560, 145, 12);
-            ctx.fill();
-            ctx.stroke();
-
-            const genderLabel = student.gender === 'Nam' ? 'Nam' : 'Nữ';
-            ctx.fillStyle = '#00ffff';
-            ctx.font = 'bold 17px Inter, sans-serif';
-            ctx.fillText(`TS: ${student.name} | Lớp: ${student.class} | ${genderLabel} - ${student.age}t`, 36, 48);
-
-            // Cột Điểm số / Kết quả
-            ctx.fillStyle = '#b4b4b4';
-            ctx.font = 'bold 15px Inter, sans-serif';
-            ctx.fillText(currentExercise === 'jump' ? 'BẬT XA (CM)' : 'ĐIỂM SỐ', 36, 78);
-
-            ctx.fillStyle = '#00ff44';
-            ctx.font = '800 54px "JetBrains Mono", monospace';
-            ctx.fillText(String(counter), 36, 132);
-
-            // Cột Thời gian
-            ctx.fillStyle = '#b4b4b4';
-            ctx.font = 'bold 15px Inter, sans-serif';
-            ctx.fillText('THỜI GIAN', 235, 78);
-
-            ctx.fillStyle = remainingTime <= 5 ? '#ff3333' : '#ffff00';
-            ctx.font = '800 50px "JetBrains Mono", monospace';
-            ctx.fillText(`${remainingTime}s`, 235, 132);
-
-            // Dòng trạng thái góc & Feedback
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '600 14px Inter, sans-serif';
-            ctx.fillText(`Góc: ${Math.round(currentAngle)} độ | ${feedback}`, 36, 154);
-
-            // 2. THANH TIẾN TRÌNH % (Bên phải màn hình giống Gap_bung.py)
-            const barTop = 200;
-            const barBottom = 500;
-            const barHeight = barBottom - barTop;
-            const fillH = Math.max(0, Math.min(100, progressBar)) / 100 * barHeight;
-            const barY = barBottom - fillH;
-
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
-            ctx.fillRect(w - 64, barTop, 32, barHeight);
-            ctx.fillStyle = '#00ff44';
-            ctx.fillRect(w - 64, barY, 32, fillH);
-            ctx.strokeStyle = '#64748b';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(w - 64, barTop, 32, barHeight);
-
-            ctx.fillStyle = '#00ff44';
-            ctx.font = 'bold 16px "JetBrains Mono", monospace';
-            ctx.fillText(`${Math.round(progressBar)}%`, w - 72, 530);
-
-            // 3. HỘP HƯỚNG DẪN HOẶC KẾT THÚC (Giống Gap_bung.py)
-            if (!isRunning && !isFinished) {
-                const boxH = 128;
-                ctx.fillStyle = 'rgba(15, 20, 28, 0.90)';
-                ctx.strokeStyle = '#00ffff';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.roundRect(20, h - boxH - 20, w - 40, boxH, 12);
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.fillStyle = '#00ffff';
-                ctx.font = 'bold 19px Inter, sans-serif';
-                ctx.fillText(`--- ĐIỀU KHIỂN THI ĐẤU: ${EXERCISE_CONFIGS[currentExercise].name.toUpperCase()} (CHUẨN BỘ GD&ĐT) ---`, 40, h - boxH + 12);
-
-                ctx.fillStyle = '#00ff44';
-                ctx.font = 'bold 16px Inter, sans-serif';
-                ctx.fillText('PHÍM NÓNG: [S] - Bắt đầu đo | [N] - Đổi thí sinh tiếp theo | [R] - Thi lại.', 40, h - boxH + 42);
-
-                ctx.fillStyle = '#e2e8f0';
-                ctx.font = '15px Inter, sans-serif';
-                ctx.fillText(EXERCISE_CONFIGS[currentExercise].guide, 40, h - boxH + 70);
-
-                ctx.fillStyle = '#ffa500';
-                ctx.font = 'bold 18px Inter, sans-serif';
-                ctx.fillText(`>>> NHẤN PHÍM 'S' HOẶC NÚT 'BẮT ĐẦU' ĐỂ TÍNH GIỜ (${totalTime}S) <<<`, 40, h - boxH + 100);
-            } else if (isFinished) {
-                const evalResult = evaluatePerformance(currentExercise, student.gender, student.age, counter);
-                const unitLabel = EXERCISE_CONFIGS[currentExercise].unit.toUpperCase();
-
-                ctx.fillStyle = 'rgba(10, 14, 23, 0.95)';
-                ctx.strokeStyle = '#ef4444';
-                ctx.lineWidth = 3.5;
-                ctx.beginPath();
-                ctx.roundRect(w / 2 - 340, h / 2 - 110, 680, 220, 16);
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.fillStyle = '#ff4444';
-                ctx.font = '800 30px Inter, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText(`HOÀN THÀNH BÀI THI (${totalTime}s)!`, w / 2, h / 2 - 52);
-
-                ctx.fillStyle = '#00ff44';
-                ctx.font = '800 34px Inter, sans-serif';
-                ctx.fillText(`KẾT QUẢ: ${counter} ${unitLabel} - XẾP LOẠI: ${evalResult.toUpperCase()}`, w / 2, h / 2 + 2);
-
-                ctx.fillStyle = '#00ffff';
-                ctx.font = 'bold 18px Inter, sans-serif';
-                ctx.fillText('ĐÃ TỰ ĐỘNG LƯU VÀO BẢNG EXCEL (CHUẨN QĐ 53/2008)', w / 2, h / 2 + 45);
-
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '16px Inter, sans-serif';
-                ctx.fillText("Nhấn phím 'N' cho thí sinh tiếp theo | 'R' để thi lại", w / 2, h / 2 + 82);
-                ctx.textAlign = 'left';
-            }
-
-            ctx.restore();
-        }
-
-        // ============================================================================
-        // 8. VÒNG LẶP RENDER CHÍNH & KẾT NỐI MEDIAPIPE POSE
+        // 9. VÒNG LẶP RENDER CHÍNH & KẾT NỐI CAMERA + MEDIAPIPE POSE (ĐÃ FIX LỖI CAMERA)
         // ============================================================================
         let mpPoseInstance = null;
         let isProcessingMp = false;
@@ -1461,7 +1598,7 @@
                     isProcessingMp = false;
                 });
             } catch (err) {
-                console.warn('MediaPipe Pose init fallback to Sim:', err);
+                console.warn('MediaPipe Pose init error:', err);
             }
         }
 
@@ -1469,7 +1606,6 @@
             const w = canvasEl.width;
             const h = canvasEl.height;
 
-            // 1. Cập nhật đồng hồ đếm ngược
             if (isRunning && !isFinished) {
                 const elapsed = (Date.now() - startTime) / 1000;
                 remainingTime = Math.max(0, Math.ceil(totalTime - elapsed));
@@ -1478,11 +1614,10 @@
                 }
             }
 
-            // 2. Vẽ nền hoặc khung hình Camera
             ctx.clearRect(0, 0, w, h);
 
             if (cameraMode === 'sim') {
-                // Vẽ phòng tập mô phỏng chuyên nghiệp
+                // Vẽ sân tập mô phỏng
                 const grad = ctx.createLinearGradient(0, 0, 0, h);
                 grad.addColorStop(0, '#0f172a');
                 grad.addColorStop(0.75, '#1e293b');
@@ -1491,34 +1626,17 @@
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, w, h);
 
-                // Lưới tọa độ kỹ thuật số
-                ctx.strokeStyle = 'rgba(56, 189, 248, 0.06)';
-                ctx.lineWidth = 1;
-                for (let x = 0; x < w; x += 64) {
-                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-                }
-                for (let y = 0; y < h; y += 64) {
-                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-                }
-
-                // Thảm tập Gym
-                if (currentExercise !== 'jump') {
-                    ctx.fillStyle = '#0284c7';
-                    ctx.beginPath();
-                    ctx.roundRect(w * 0.18, h * 0.74, w * 0.68, 16, 8);
-                    ctx.fill();
-                }
-
                 latestPoseLandmarks = generateSimulatedLandmarks();
                 processExerciseBiomechanics(latestPoseLandmarks, w, h);
-                drawPositioningGuide(w, h, latestPoseLandmarks);
+                drawPositioningGuideOverlay(w, h);
                 drawStandingLongJumpRuler(w, h);
                 drawCustomSkeleton(latestPoseLandmarks, w, h);
             } else {
+                // Chế độ Camera thực tế (Webcam / Điện thoại / IP / File Video)
                 const sourceMedia = cameraMode === 'ip' ? ipImgEl : videoEl;
                 const isReady = cameraMode === 'ip'
                     ? (ipImgEl.complete && ipImgEl.naturalWidth > 0)
-                    : (videoEl.readyState >= 2);
+                    : (videoEl.readyState >= 2 && videoEl.videoWidth > 0);
 
                 if (isReady) {
                     ctx.save();
@@ -1538,17 +1656,18 @@
                         }
                     }
                 } else {
+                    // Màn hình chờ mở Camera (Vẫn hiển thị đầy đủ Thước đo Bật xa & Khung định vị!)
                     ctx.fillStyle = '#0f172a';
                     ctx.fillRect(0, 0, w, h);
-                    ctx.fillStyle = '#94a3b8';
+                    ctx.fillStyle = '#38bdf8';
                     ctx.font = 'bold 20px Inter, sans-serif';
                     ctx.textAlign = 'center';
-                    ctx.fillText('Đang mở Camera... Hãy bấm [Cho phép / Allow] trên trình duyệt', w / 2, h / 2);
+                    ctx.fillText('📷 Đang kết nối Camera... Hãy bấm [Cho phép / Allow] trên trình duyệt hoặc bấm nút [Mở Cam Sau / Webcam]', w / 2, h * 0.28);
                     ctx.textAlign = 'left';
                 }
 
-                // Luôn vẽ khung định vị người nằm để giáo viên/học sinh hướng camera vào đúng chỗ
-                drawPositioningGuide(w, h, latestPoseLandmarks);
+                // Luôn luôn vẽ Khung định vị và Thước đo Bật xa lên trên khung hình Camera
+                drawPositioningGuideOverlay(w, h);
                 drawStandingLongJumpRuler(w, h);
 
                 if (latestPoseLandmarks) {
@@ -1562,39 +1681,13 @@
         }
 
         // ============================================================================
-        // 9. QUẢN LÝ CAMERA TRƯỚC / SAU TRÊN ĐIỆN THOẠI & WEBCAM MÁY TÍNH
+        // 10. HÀM BẬT CAMERA TRỰC TIẾP (ĐIỆN THOẠI & LAPTOP WEBCAM)
         // ============================================================================
-        // 9. QUẢN LÝ NGUỒN CAMERA (WEBCAM, DROIDCAM IP, FILE VIDEO, MÔ PHỎNG)
-        // ============================================================================
-        async function handleCameraSourceChange() {
-            cameraMode = document.getElementById('camera-select').value;
-            document.getElementById('webcam-device-wrap').classList.add('hidden');
-            document.getElementById('ip-cam-wrap').classList.add('hidden');
-            document.getElementById('file-upload-wrap').classList.add('hidden');
-            document.getElementById('sim-control-overlay').classList.add('hidden');
-
-            stopCurrentVideoStream();
-
-            if (cameraMode === 'sim') {
-                document.getElementById('sim-control-overlay').classList.remove('hidden');
-                setAiStatus('Mô phỏng AI Sẵn sàng', 'emerald');
-            } else if (cameraMode === 'webcam') {
-                document.getElementById('webcam-device-wrap').classList.remove('hidden');
-                document.getElementById('webcam-device-wrap').classList.add('flex');
-                await populateWebcamDevices();
-                await startWebcam();
-            } else if (cameraMode === 'ip') {
-                document.getElementById('ip-cam-wrap').classList.remove('hidden');
-                document.getElementById('ip-cam-wrap').classList.add('flex');
-                setAiStatus('Nhập IP DroidCam', 'amber');
-            } else if (cameraMode === 'file') {
-                document.getElementById('file-upload-wrap').classList.remove('hidden');
-                document.getElementById('file-upload-wrap').classList.add('flex');
-                setAiStatus('Chọn Video để chấm', 'sky');
-            }
-        }
-
         function stopCurrentVideoStream() {
+            if (activeMediaStream) {
+                activeMediaStream.getTracks().forEach(t => t.stop());
+                activeMediaStream = null;
+            }
             if (videoEl.srcObject) {
                 videoEl.srcObject.getTracks().forEach(t => t.stop());
                 videoEl.srcObject = null;
@@ -1603,40 +1696,167 @@
             ipImgEl.src = '';
         }
 
+        async function startCameraStream(facingMode = 'environment') {
+            currentFacingMode = facingMode;
+            cameraMode = 'webcam';
+            document.getElementById('camera-select').value = 'webcam';
+            document.getElementById('sim-control-overlay').classList.add('hidden');
+            document.getElementById('ip-cam-wrap').classList.add('hidden');
+            document.getElementById('file-upload-wrap').classList.add('hidden');
+            document.getElementById('webcam-device-wrap').classList.remove('hidden');
+
+            // Tự động tắt Lật gương khi dùng Cam sau để không bị ngược thước đo bật xa
+            document.getElementById('mirror-toggle').checked = (facingMode === 'user');
+            updateCameraButtonHighlight(facingMode);
+
+            stopCurrentVideoStream();
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                const banner = document.getElementById('camera-alert-banner');
+                banner.classList.remove('hidden');
+                document.getElementById('camera-alert-text').innerHTML =
+                    `⚠️ <b>Trình duyệt đã khóa quyền Camera</b> vì trang web chưa mở qua giao thức bảo mật <b>HTTPS</b> hoặc <b>localhost</b>. ` +
+                    `Hãy mở qua link HTTPS hoặc bấm <b>[Dùng Chế độ Mô phỏng]</b> bên cạnh để kiểm thử.`;
+                setAiStatus('Chờ quyền HTTPS Camera');
+                return;
+            }
+
+            setAiStatus('Đang mở Camera...');
+
+            try {
+                let stream = null;
+                // Bước 1: Thử mở với facingMode ưu tiên (Cam sau hoặc Cam trước)
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        audio: false,
+                        video: {
+                            facingMode: { ideal: facingMode },
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        }
+                    });
+                } catch (err1) {
+                    // Bước 2: Mở bất kỳ Camera / Webcam nào có sẵn trên máy
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        audio: false,
+                        video: true
+                    });
+                }
+
+                activeMediaStream = stream;
+                videoEl.srcObject = stream;
+                videoEl.setAttribute('playsinline', 'true');
+                videoEl.muted = true;
+                await videoEl.play();
+
+                document.getElementById('camera-alert-banner').classList.add('hidden');
+                const camName = facingMode === 'environment' ? 'Cam Sau / Webcam' : 'Cam Trước';
+                setAiStatus(`Đang chạy: ${camName}`);
+                showToast(`Đã bật ${camName} thành công!`, 'success');
+
+                await populateWebcamDevices();
+            } catch (err) {
+                console.error('Camera access error:', err);
+                const banner = document.getElementById('camera-alert-banner');
+                banner.classList.remove('hidden');
+                document.getElementById('camera-alert-text').innerHTML =
+                    `⚠️ Không thể bật Camera (<b>${err.name}</b>). Vui lòng kiểm tra xem bạn đã bấm <b>Cho phép (Allow)</b> truy cập Máy ảnh trên thanh địa chỉ trình duyệt chưa, hoặc thiết bị có đang mở phần mềm khác chiếm Camera không.`;
+                setAiStatus('Lỗi mở Camera');
+            }
+        }
+
+        function flipMobileCamera() {
+            const nextMode = (currentFacingMode === 'environment') ? 'user' : 'environment';
+            startCameraStream(nextMode);
+        }
+
+        function switchToSimMode() {
+            document.getElementById('camera-select').value = 'sim';
+            document.getElementById('camera-alert-banner').classList.add('hidden');
+            handleCameraSourceChange();
+        }
+
+        async function handleCameraSourceChange() {
+            cameraMode = document.getElementById('camera-select').value;
+            document.getElementById('webcam-device-wrap').classList.add('hidden');
+            document.getElementById('ip-cam-wrap').classList.add('hidden');
+            document.getElementById('file-upload-wrap').classList.add('hidden');
+            document.getElementById('sim-control-overlay').classList.add('hidden');
+
+            stopCurrentVideoStream();
+            updateCameraButtonHighlight(null);
+
+            if (cameraMode === 'sim') {
+                document.getElementById('sim-control-overlay').classList.remove('hidden');
+                document.getElementById('camera-alert-banner').classList.add('hidden');
+                setAiStatus('Chế độ Mô phỏng AI');
+            } else if (cameraMode === 'webcam') {
+                document.getElementById('webcam-device-wrap').classList.remove('hidden');
+                await startCameraStream(currentFacingMode);
+            } else if (cameraMode === 'ip') {
+                document.getElementById('ip-cam-wrap').classList.remove('hidden');
+                document.getElementById('ip-cam-wrap').classList.add('flex');
+                setAiStatus('Nhập IP DroidCam');
+            } else if (cameraMode === 'file') {
+                document.getElementById('file-upload-wrap').classList.remove('hidden');
+                document.getElementById('file-upload-wrap').classList.add('flex');
+                setAiStatus('Chọn Video để chấm');
+            }
+        }
+
+        function updateCameraButtonHighlight(mode) {
+            const btnRear = document.getElementById('btn-cam-rear');
+            const btnFront = document.getElementById('btn-cam-front');
+            btnRear.classList.remove('cam-btn-active');
+            btnFront.classList.remove('cam-btn-active');
+            if (mode === 'environment') btnRear.classList.add('cam-btn-active');
+            if (mode === 'user') btnFront.classList.add('cam-btn-active');
+        }
+
         async function populateWebcamDevices() {
             try {
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 const videoDevices = devices.filter(d => d.kind === 'videoinput');
                 const selectEl = document.getElementById('webcam-device-list');
+                const currentTrack = videoEl.srcObject?.getVideoTracks()[0];
+                const activeDeviceId = currentTrack?.getSettings()?.deviceId;
+
                 selectEl.innerHTML = '';
                 videoDevices.forEach((d, idx) => {
                     const opt = document.createElement('option');
                     opt.value = d.deviceId;
-                    opt.text = d.label || `Cổng Camera #${idx}`;
+                    opt.text = d.label || `Cổng Camera #${idx + 1}`;
+                    if (d.deviceId && d.deviceId === activeDeviceId) {
+                        opt.selected = true;
+                    }
                     selectEl.appendChild(opt);
                 });
             } catch (e) {
-                console.warn('Cannot list devices:', e);
+                console.warn('Cannot enumerate video devices:', e);
             }
         }
 
-        async function startWebcam() {
+        async function startWebcamByDeviceId() {
+            const deviceId = document.getElementById('webcam-device-list').value;
+            if (!deviceId) return;
             try {
                 stopCurrentVideoStream();
-                const deviceId = document.getElementById('webcam-device-list').value;
-                const constraints = {
-                    video: deviceId ? { deviceId: { exact: deviceId }, width: 1280, height: 720 } : { width: 1280, height: 720 }
-                };
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: false,
+                    video: {
+                        deviceId: { exact: deviceId },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                });
+                activeMediaStream = stream;
                 videoEl.srcObject = stream;
+                videoEl.setAttribute('playsinline', 'true');
                 await videoEl.play();
-                setAiStatus('Camera Trực tiếp Đang chạy', 'emerald');
-                showToast('Đã kết nối Webcam thành công!', 'success');
+                setAiStatus('Đã đổi cổng Camera');
+                showToast('Đã chuyển cổng Camera thành công!', 'info');
             } catch (err) {
-                setAiStatus('Không tìm thấy Webcam -> Chuyển sang Mô phỏng', 'amber');
-                showToast('Không thể mở Webcam trên thiết bị này. Đã bật Chế độ Mô phỏng AI.', 'warning');
-                document.getElementById('camera-select').value = 'sim';
-                handleCameraSourceChange();
+                showToast('Lỗi chuyển cổng Camera: ' + err.message, 'warning');
             }
         }
 
@@ -1651,7 +1871,7 @@
                 }
             }
             ipImgEl.src = ipInput;
-            setAiStatus('Đang kết nối DroidCam Wi-Fi...', 'sky');
+            setAiStatus('Đang kết nối DroidCam...');
             showToast(`Đang mở luồng DroidCam: ${ipInput}`, 'info');
         }
 
@@ -1661,18 +1881,33 @@
             stopCurrentVideoStream();
             const url = URL.createObjectURL(file);
             videoEl.src = url;
+            videoEl.setAttribute('playsinline', 'true');
             videoEl.play();
-            setAiStatus('Đang phân tích Video', 'emerald');
+            setAiStatus('Đang phân tích Video');
             showToast(`Đã tải video: ${file.name}`, 'success');
         }
 
-        function setAiStatus(text, color = 'emerald') {
-            const txtEl = document.getElementById('ai-status-text');
-            txtEl.innerText = text;
+        function setAiStatus(text) {
+            document.getElementById('ai-status-text').innerText = text;
+        }
+
+        function togglePoseDirection() {
+            poseDirection = (poseDirection === 'left-to-right') ? 'right-to-left' : 'left-to-right';
+            document.getElementById('pose-dir-label').innerText =
+                poseDirection === 'left-to-right' ? 'Hướng: Trái ➔ Phải' : 'Hướng: Phải ➔ Trái';
+
+            // Nếu đang ở bài Bật xa, đảo chiều Vạch bắt đầu và Vạch mốc chuẩn
+            const temp = jumpCalib.startLineX;
+            jumpCalib.startLineX = 1 - jumpCalib.startLineX;
+            jumpCalib.refLineX = 1 - jumpCalib.refLineX;
+            if (jumpCalib.landingX !== null) {
+                jumpCalib.landingX = 1 - jumpCalib.landingX;
+            }
+            updateJumpPanelLabels();
         }
 
         // ============================================================================
-        // 10. ĐIỀU KHIỂN BÀI THI & LƯU KẾT QUẢ (S, R, N, EXCEL)
+        // 11. ĐIỀU KHIỂN BÀI THI & CÁC HÀM CHUYÊN BIỆT CHO BẬT XA TẠI CHỖ
         // ============================================================================
         function switchExercise(exKey) {
             currentExercise = exKey;
@@ -1683,26 +1918,115 @@
             document.getElementById('current-exercise-badge').innerText = cfg.shortName;
             document.getElementById('input-thresh-down').value = cfg.angleDown;
             document.getElementById('input-thresh-up').value = cfg.angleUp;
-            // Cập nhật tiêu đề cột điểm và bảng công cụ Bật xa / Khung căn chỉnh
-            const guideWrap = document.getElementById('guide-controls-wrap');
+            document.getElementById('input-total-time').value = cfg.totalTime;
+            document.getElementById('exercise-guide-text').innerHTML = `<i class="fa-solid fa-circle-info text-sky-400 mr-1"></i> ${cfg.guide}`;
+
             if (exKey === 'jump') {
                 document.getElementById('metric-title-label').innerText = 'THÀNH TÍCH BẬT XA';
                 document.getElementById('metric-unit-label').innerText = 'centimet (cm)';
                 document.getElementById('jump-calibration-panel').classList.remove('hidden');
                 document.getElementById('sim-jump-controls').classList.remove('hidden');
                 document.getElementById('sim-angle-controls').classList.add('hidden');
-                if (guideWrap) guideWrap.classList.add('hidden');
             } else {
                 document.getElementById('metric-title-label').innerText = 'SỐ LẦN HỢP LỆ';
                 document.getElementById('metric-unit-label').innerText = `lần / ${cfg.totalTime} giây`;
                 document.getElementById('jump-calibration-panel').classList.add('hidden');
                 document.getElementById('sim-jump-controls').classList.add('hidden');
                 document.getElementById('sim-angle-controls').classList.remove('hidden');
-                if (guideWrap) guideWrap.classList.remove('hidden');
             }
 
             resetExam();
         }
+
+        // Đặt Vạch bắt đầu bật nhảy theo đúng vị trí mũi chân hiện tại của học sinh
+        function lockCurrentFootAsTakeoff() {
+            if (latestPoseLandmarks && latestPoseLandmarks.length >= 33) {
+                const footPt = latestPoseLandmarks[31] || latestPoseLandmarks[27];
+                if (footPt && footPt.x > 0.05 && footPt.x < 0.90) {
+                    jumpCalib.startLineX = footPt.x;
+                    updateJumpPanelLabels();
+                    showToast('Đã đặt Vạch Bắt Đầu Nhảy (0cm) tại vị trí chân học sinh!', 'success');
+                    return;
+                }
+            }
+            showToast('Kéo trực tiếp Vạch Vàng (0cm) trên màn hình để đặt vị trí bắt đầu nhảy!', 'info');
+        }
+
+        function clearLandingMarker() {
+            jumpCalib.landingX = null;
+            counter = 0;
+            updateLiveScoreUI();
+            updateJumpPanelLabels();
+            showToast('Đã xóa vạch rơi xuống để đo lượt nhảy mới!', 'info');
+        }
+
+        function updateJumpCalibration() {
+            jumpCalib.realDistCm = parseInt(document.getElementById('calib-distance-cm').value) || 250;
+            if (jumpCalib.landingX !== null) {
+                counter = xToJumpCm(jumpCalib.landingX);
+                updateLiveScoreUI();
+                updateJumpPanelLabels();
+            }
+        }
+
+        function applyManualJumpScore() {
+            const val = parseInt(document.getElementById('manual-jump-cm').value);
+            if (!isNaN(val) && val >= 0) {
+                counter = val;
+                jumpCalib.landingX = jumpCmToX(val);
+                updateLiveScoreUI();
+                updateJumpPanelLabels();
+                showToast(`Đã đặt Vị trí rơi xuống tại: ${val} cm`, 'success');
+            }
+        }
+
+        // Kéo thả 3 vạch trên màn hình Bật xa: Vạch bắt đầu (start), Mốc chuẩn (ref), hoặc Vạch rơi (landing)
+        function handlePointerDown(clientX) {
+            if (currentExercise !== 'jump') return;
+            const rect = canvasEl.getBoundingClientRect();
+            const normX = (clientX - rect.left) / rect.width;
+
+            if (jumpCalib.landingX !== null && Math.abs(normX - jumpCalib.landingX) < 0.035) {
+                jumpCalib.draggingMarker = 'landing';
+            } else if (Math.abs(normX - jumpCalib.startLineX) < 0.04) {
+                jumpCalib.draggingMarker = 'start';
+            } else if (Math.abs(normX - jumpCalib.refLineX) < 0.04) {
+                jumpCalib.draggingMarker = 'ref';
+            }
+        }
+
+        function handlePointerMove(clientX) {
+            if (!jumpCalib.draggingMarker) return;
+            const rect = canvasEl.getBoundingClientRect();
+            const normX = Math.max(0.05, Math.min(0.95, (clientX - rect.left) / rect.width));
+
+            if (jumpCalib.draggingMarker === 'start') {
+                jumpCalib.startLineX = normX;
+                if (jumpCalib.landingX !== null) counter = xToJumpCm(jumpCalib.landingX);
+            } else if (jumpCalib.draggingMarker === 'ref') {
+                jumpCalib.refLineX = normX;
+                if (jumpCalib.landingX !== null) counter = xToJumpCm(jumpCalib.landingX);
+            } else if (jumpCalib.draggingMarker === 'landing') {
+                jumpCalib.landingX = normX;
+                counter = xToJumpCm(normX);
+            }
+            updateLiveScoreUI();
+            updateJumpPanelLabels();
+        }
+
+        canvasEl.addEventListener('mousedown', (e) => handlePointerDown(e.clientX));
+        window.addEventListener('mousemove', (e) => handlePointerMove(e.clientX));
+        window.addEventListener('mouseup', () => { jumpCalib.draggingMarker = null; });
+
+        canvasEl.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) handlePointerDown(e.touches[0].clientX);
+        }, { passive: true });
+        window.addEventListener('touchmove', (e) => {
+            if (jumpCalib.draggingMarker && e.touches.length > 0) {
+                handlePointerMove(e.touches[0].clientX);
+            }
+        }, { passive: true });
+        window.addEventListener('touchend', () => { jumpCalib.draggingMarker = null; });
 
         function startExam() {
             counter = 0;
@@ -1718,13 +2042,14 @@
 
             playBeep(900, 180);
             updateLiveScoreUI();
+            updateJumpPanelLabels();
             document.getElementById('btn-start-text').innerText = `Đang chấm (${totalTime}s)...`;
         }
 
         function finishExamSession() {
             isFinished = true;
             isRunning = false;
-            playBeep(1200, 700); // Giống winsound.Beep(1200, 700) trong Gap_bung.py
+            playBeep(1200, 700);
             document.getElementById('btn-start-text').innerText = `Bắt đầu ${totalTime}s [Phím S]`;
 
             if (!dataSaved) {
@@ -1745,6 +2070,7 @@
             feedback = 'San sang';
             document.getElementById('btn-start-text').innerText = `Bắt đầu ${totalTime}s [Phím S]`;
             updateLiveScoreUI();
+            updateJumpPanelLabels();
         }
 
         function nextStudent() {
@@ -1813,67 +2139,15 @@
         }
 
         function resetThresholdsToDefault() {
-            if (currentExercise === 'situp') {
-                EXERCISE_CONFIGS.situp.angleDown = 130;
-                EXERCISE_CONFIGS.situp.angleUp = 65;
-                EXERCISE_CONFIGS.situp.totalTime = 30;
-            } else if (currentExercise === 'pushup') {
-                EXERCISE_CONFIGS.pushup.angleDown = 95;
-                EXERCISE_CONFIGS.pushup.angleUp = 155;
-                EXERCISE_CONFIGS.pushup.totalTime = 30;
-            } else {
-                EXERCISE_CONFIGS.jump.angleDown = 120;
-                EXERCISE_CONFIGS.jump.angleUp = 165;
-                EXERCISE_CONFIGS.jump.totalTime = 15;
-            }
+            EXERCISE_CONFIGS.situp.angleDown = 130; EXERCISE_CONFIGS.situp.angleUp = 65; EXERCISE_CONFIGS.situp.totalTime = 30;
+            EXERCISE_CONFIGS.pushup.angleDown = 95; EXERCISE_CONFIGS.pushup.angleUp = 155; EXERCISE_CONFIGS.pushup.totalTime = 30;
+            EXERCISE_CONFIGS.jump.angleDown = 120; EXERCISE_CONFIGS.jump.angleUp = 165; EXERCISE_CONFIGS.jump.totalTime = 15;
             switchExercise(currentExercise);
-            showToast('Đã khôi phục thông số góc mặc định!', 'info');
+            showToast('Đã khôi phục thông số mặc định!', 'info');
         }
-
-        // Calibration dragging on Canvas for Standing Long Jump
-        function updateJumpCalibration() {
-            jumpCalib.realDistCm = parseInt(document.getElementById('calib-distance-cm').value) || 250;
-        }
-
-        function applyManualJumpScore() {
-            const val = parseInt(document.getElementById('manual-jump-cm').value);
-            if (!isNaN(val) && val >= 0) {
-                counter = val;
-                const pixelSpan = Math.abs(jumpCalib.refLineX - jumpCalib.startLineX);
-                jumpCalib.landingX = jumpCalib.startLineX + (val / jumpCalib.realDistCm) * pixelSpan;
-                updateLiveScoreUI();
-                showToast(`Đã cập nhật thành tích bật xa: ${val} cm`, 'success');
-            }
-        }
-
-        canvasEl.addEventListener('mousedown', (e) => {
-            if (currentExercise !== 'jump') return;
-            const rect = canvasEl.getBoundingClientRect();
-            const normX = (e.clientX - rect.left) / rect.width;
-            if (Math.abs(normX - jumpCalib.startLineX) < 0.04) {
-                jumpCalib.draggingMarker = 'start';
-            } else if (Math.abs(normX - jumpCalib.refLineX) < 0.04) {
-                jumpCalib.draggingMarker = 'ref';
-            }
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!jumpCalib.draggingMarker) return;
-            const rect = canvasEl.getBoundingClientRect();
-            const normX = Math.max(0.05, Math.min(0.95, (e.clientX - rect.left) / rect.width));
-            if (jumpCalib.draggingMarker === 'start') {
-                jumpCalib.startLineX = Math.min(normX, jumpCalib.refLineX - 0.1);
-            } else if (jumpCalib.draggingMarker === 'ref') {
-                jumpCalib.refLineX = Math.max(normX, jumpCalib.startLineX + 0.1);
-            }
-        });
-
-        window.addEventListener('mouseup', () => {
-            jumpCalib.draggingMarker = null;
-        });
 
         // ============================================================================
-        // 11. LƯU BẢNG DỮ LIỆU & XUẤT FILE EXCEL (.XLSX CHUẨN QĐ 53/2008)
+        // 12. LƯU BẢNG DỮ LIỆU & XUẤT FILE EXCEL (.XLSX CHUẨN QĐ 53/2008)
         // ============================================================================
         function formatNowStr() {
             const now = new Date();
@@ -1917,7 +2191,7 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="10" class="py-8 text-center text-slate-500 text-sm">
-                            Chưa có dữ liệu kiểm tra nào. Nhấn <b>[Bắt đầu 30s]</b> hoặc <b>[Thêm dữ liệu mẫu]</b> để trải nghiệm.
+                            Chưa có dữ liệu kiểm tra nào. Nhấn <b>[Bắt đầu]</b> hoặc <b>[Thêm dữ liệu mẫu]</b> để trải nghiệm.
                         </td>
                     </tr>
                 `;
@@ -1985,7 +2259,6 @@
                 return;
             }
 
-            // Tạo dữ liệu chuẩn tương thích với save_result_to_excel trong Gap_bung.py
             const rows = examRecords.map((r, index) => ({
                 "STT": index + 1,
                 "Họ và Tên": r.name,
@@ -2001,16 +2274,8 @@
 
             const worksheet = XLSX.utils.json_to_sheet(rows);
             worksheet['!cols'] = [
-                { wch: 6 },  // STT
-                { wch: 25 }, // Họ và Tên
-                { wch: 10 }, // Lớp
-                { wch: 10 }, // Giới tính
-                { wch: 8 },  // Tuổi
-                { wch: 26 }, // Nội dung
-                { wch: 15 }, // Kết quả
-                { wch: 12 }, // Điểm thô
-                { wch: 22 }, // Thời gian
-                { wch: 18 }  // Xếp loại
+                { wch: 6 }, { wch: 25 }, { wch: 10 }, { wch: 10 }, { wch: 8 },
+                { wch: 26 }, { wch: 15 }, { wch: 12 }, { wch: 22 }, { wch: 18 }
             ];
 
             const workbook = XLSX.utils.book_new();
@@ -2020,7 +2285,7 @@
         }
 
         // ============================================================================
-        // 12. MODAL CHỈNH SỬA TIÊU CHUẨN QĐ 53/2008/QĐ-BGDĐT
+        // 13. MODAL CHỈNH SỬA TIÊU CHUẨN QĐ 53/2008/QĐ-BGDĐT & PHÍM TẮT
         // ============================================================================
         function openStandardsModal() {
             const container = document.getElementById('standards-modal-body');
@@ -2081,9 +2346,6 @@
             document.getElementById('standards-modal').classList.add('hidden');
         }
 
-        // ============================================================================
-        // 13. PHÍM TẮT BÀN PHÍM (S, R, N) GIỐNG HỆT GAP_BUNG.PY
-        // ============================================================================
         window.addEventListener('keydown', (e) => {
             const tag = document.activeElement?.tagName;
             if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
@@ -2101,7 +2363,6 @@
             }
         });
 
-        // Toast Helper
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toast-container');
             const colors = {
@@ -2120,13 +2381,16 @@
         }
 
         // ============================================================================
-        // KHỞI ĐỘNG ỨNG DỤNG
+        // KHỞI ĐỘNG HỆ THỐNG: TỰ ĐỘNG GỌI MỞ CAMERA NGAY KHI VÀO TRANG
         // ============================================================================
         window.onload = function () {
             initMediaPipePose();
             syncStudentInfo();
             renderRecordsTable();
+            updateJumpPanelLabels();
             mainRenderLoop();
+            // Tự động mở Camera ngay khi trang vừa tải xong
+            startCameraStream('environment');
         };
     </script>
 </body>
