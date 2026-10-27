@@ -21,7 +21,6 @@
     <!-- SheetJS -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <!-- CSS NỘI TUYẾN DỰ PHÒNG (ĐẢM BẢO KHÔNG BAO GIỜ BỊ ĐEN MÀN HÌNH KỂ CẢ KHI LỖI MẠNG) -->
     <style>
         * { box-sizing: border-box; }
         body {
@@ -54,6 +53,13 @@
             height: 100%;
             display: block;
         }
+        @keyframes pulse-border {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+        }
+        .btn-confirm-pulse {
+            animation: pulse-border 1.5s infinite;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -67,7 +73,7 @@
                 </div>
                 <div>
                     <h1 class="text-sm md:text-base font-extrabold tracking-tight text-white leading-tight">AI ĐÁNH GIÁ THỂ LỰC HỌC SINH (QĐ 53)</h1>
-                    <p class="text-[11px] text-sky-300">Gập bụng 30s • Chống đẩy • Bật xa tại chỗ</p>
+                    <p class="text-[11px] text-sky-300">Gập bụng 30s • Chống đẩy • Bật xa tại chỗ (Xác nhận tiếp đất)</p>
                 </div>
             </div>
 
@@ -187,7 +193,7 @@
                     </div>
 
                     <!-- Bảng điều chỉnh Giả lập AI (Góc phải) -->
-                    <div id="sim-control-overlay" class="absolute top-12 right-2.5 bg-slate-900/95 border border-sky-500/50 rounded-xl p-2.5 w-52 shadow-xl z-20">
+                    <div id="sim-control-overlay" class="absolute top-12 right-2.5 bg-slate-900/95 border border-sky-500/50 rounded-xl p-2.5 w-56 shadow-xl z-20">
                         <div class="flex items-center justify-between mb-1">
                             <span class="text-[11px] font-bold text-sky-400"><i class="fa-solid fa-robot mr-1"></i>Mô phỏng AI</span>
                             <label class="flex items-center gap-1 text-[11px] text-amber-300 cursor-pointer">
@@ -201,22 +207,27 @@
                             </div>
                             <input type="range" id="sim-angle-slider" min="45" max="175" value="145" oninput="onManualSimSlider()" class="w-full cursor-pointer">
                         </div>
-                        <div id="sim-jump-controls" class="hidden mt-1.5 pt-1.5 border-t border-slate-700">
-                            <div class="flex justify-between text-xs text-slate-300 mb-1">
+                        <div id="sim-jump-controls" class="hidden mt-1.5 pt-1.5 border-t border-slate-700 space-y-1.5">
+                            <div class="flex justify-between text-xs text-slate-300">
                                 <span>Mức bật xa:</span>
                                 <span id="sim-jump-target-val" class="font-mono font-bold text-emerald-400">215 cm</span>
                             </div>
-                            <input type="range" id="sim-jump-slider" min="100" max="280" value="215" oninput="document.getElementById('sim-jump-target-val').innerText = this.value + ' cm'" class="w-full cursor-pointer mb-1.5">
-                            <button onclick="triggerSimJump()" class="w-full py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg cursor-pointer">
-                                Nhảy Bật Xa Mẫu!
-                            </button>
+                            <input type="range" id="sim-jump-slider" min="100" max="280" value="215" oninput="document.getElementById('sim-jump-target-val').innerText = this.value + ' cm'" class="w-full cursor-pointer">
+                            <div class="grid grid-cols-2 gap-1">
+                                <button onclick="triggerSimJump()" class="py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] rounded-lg cursor-pointer">
+                                    1. Nhảy mẫu
+                                </button>
+                                <button onclick="confirmLandingScore()" class="py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-[11px] rounded-lg cursor-pointer">
+                                    2. Chốt KQ
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- THANH NÚT ĐIỀU KHIỂN NẰM NGAY TRONG MÀN HÌNH CAMERA (KHÔNG BỊ XA MÀN HÌNH) -->
-                    <div class="absolute bottom-2 left-2 right-2 z-30 flex flex-wrap items-center justify-between gap-1.5 bg-slate-950/90 border border-slate-600 rounded-xl px-3 py-2 shadow-2xl">
+                    <!-- THANH NÚT ĐIỀU KHIỂN NẰM NGAY TRONG MÀN HÌNH CAMERA -->
+                    <div class="absolute bottom-2 left-2 right-2 z-30 flex flex-wrap items-center justify-between gap-1.5 bg-slate-950/92 border border-slate-600 rounded-xl px-3 py-2 shadow-2xl">
                         <div class="flex flex-wrap items-center gap-1.5">
-                            <button onclick="startExam()" id="btn-start" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs md:text-sm shadow flex items-center gap-1.5 cursor-pointer">
+                            <button onclick="startExam()" id="btn-start" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs md:text-sm shadow flex items-center gap-1.5 cursor-pointer">
                                 <i class="fa-solid fa-play"></i>
                                 <span id="btn-start-text">Bắt đầu 30s [S]</span>
                             </button>
@@ -231,35 +242,57 @@
                                 <span>Đổi TS [N]</span>
                             </button>
 
-                            <button onclick="manualSaveResult()" class="px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs md:text-sm shadow flex items-center gap-1 cursor-pointer">
+                            <button onclick="manualSaveResult()" id="btn-manual-save" class="px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs md:text-sm shadow flex items-center gap-1 cursor-pointer">
                                 <i class="fa-solid fa-floppy-disk"></i>
                                 <span>Lưu KQ</span>
                             </button>
                         </div>
 
-                        <!-- Nút chuyên biệt cho Bật xa tại chỗ ngay trên màn hình -->
-                        <div id="onscreen-jump-dock" class="hidden items-center gap-1.5">
-                            <button onclick="lockCurrentFootAsTakeoff()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs flex items-center gap-1 cursor-pointer">
+                        <!-- CỤM NÚT CHUYÊN BIỆT CHO BẬT XA TẠI CHỖ (CÓ NÚT XÁC NHẬN KHI TIẾP ĐẤT) -->
+                        <div id="onscreen-jump-dock" class="hidden flex-wrap items-center gap-1.5">
+                            <!-- NÚT MỚI: XÁC NHẬN THÀNH TÍCH KHI TIẾP ĐẤT -->
+                            <button onclick="confirmLandingScore()" id="btn-confirm-jump" class="btn-confirm-pulse px-3.5 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-xs md:text-sm border-2 border-white shadow-lg flex items-center gap-1.5 cursor-pointer transition active:scale-95" title="Bấm khi học sinh đã bật nhảy và tiếp đất để chốt thành tích & lưu vào bảng">
+                                <i class="fa-solid fa-circle-check text-base"></i>
+                                <span id="btn-confirm-jump-text">✅ Xác nhận Tiếp Đất [Space]</span>
+                            </button>
+
+                            <button onclick="lockCurrentFootAsTakeoff()" class="px-2.5 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs flex items-center gap-1 cursor-pointer" title="Đặt Vạch Bắt Đầu 0cm ngay tại mũi chân học sinh">
                                 <i class="fa-solid fa-location-crosshairs"></i>
                                 <span>Đặt Vạch 0cm</span>
                             </button>
-                            <button onclick="clearLandingMarker()" class="px-2.5 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-600 text-white font-bold text-xs flex items-center gap-1 cursor-pointer">
+
+                            <button onclick="clearLandingMarker()" class="px-2.5 py-2 rounded-lg bg-rose-700 hover:bg-rose-600 text-white font-bold text-xs flex items-center gap-1 cursor-pointer" title="Xóa vạch rơi để nhảy lại">
                                 <i class="fa-solid fa-eraser"></i>
-                                <span>Xóa Vạch Rơi</span>
+                                <span>Xóa Vạch</span>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- THANH THÔNG SỐ BẬT XA TẠI CHỖ (Hiện khi chọn bài số 3) -->
-                <div id="jump-calibration-panel" class="hidden glass-panel p-3 border border-amber-500/50">
+                <!-- THANH THÔNG SỐ & NÚT XÁC NHẬN THÀNH TÍCH BẬT XA TẠI CHỖ -->
+                <div id="jump-calibration-panel" class="hidden glass-panel p-3 border-2 border-emerald-500/50 space-y-2.5">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-extrabold">
+                                🏃 Trạng thái Bật xa: <span id="jump-status-badge-text" class="text-white">Đang chờ bật nhảy...</span>
+                            </span>
+                            <span class="text-xs text-slate-300 hidden sm:inline">
+                                (Khi học sinh tiếp đất, bấm <b>[✅ Xác nhận Tiếp Đất]</b> hoặc phím <b>[Space]</b> để chốt thành tích)
+                            </span>
+                        </div>
+                        <button onclick="confirmLandingScore()" class="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs shadow-lg flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-check-double"></i>
+                            <span>Chốt & Lưu Thành Tích Tiếp Đất Ngay</span>
+                        </button>
+                    </div>
+
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                         <div class="bg-slate-900 px-3 py-2 rounded-lg border border-amber-500/40 flex items-center justify-between">
                             <span class="text-amber-400 font-bold">🚩 Vạch Bắt Đầu:</span>
                             <span id="jump-start-pos-label" class="font-mono font-bold text-amber-200">0 cm</span>
                         </div>
                         <div class="bg-slate-900 px-3 py-2 rounded-lg border border-emerald-500/40 flex items-center justify-between">
-                            <span class="text-emerald-400 font-bold">🎯 Vị Trí Rơi:</span>
+                            <span class="text-emerald-400 font-bold">🎯 Vị Trí Tiếp Đất:</span>
                             <span id="jump-landing-pos-label" class="font-mono font-bold text-emerald-300">Chưa nhảy</span>
                         </div>
                         <div class="bg-slate-900 px-3 py-2 rounded-lg border border-sky-500/40 flex items-center justify-between">
@@ -270,10 +303,10 @@
                             </div>
                         </div>
                         <div class="bg-slate-900 px-3 py-2 rounded-lg border border-slate-600 flex items-center justify-between">
-                            <span class="text-slate-300 font-bold">Nhập KQ:</span>
+                            <span class="text-slate-300 font-bold">Chỉnh tay (cm):</span>
                             <div class="flex items-center gap-1">
                                 <input type="number" id="manual-jump-cm" placeholder="215" class="w-14 bg-slate-800 text-emerald-400 font-mono font-bold text-xs px-1 py-0.5 rounded border border-slate-600 text-center">
-                                <button onclick="applyManualJumpScore()" class="px-2 py-0.5 bg-emerald-600 text-white font-bold rounded cursor-pointer">Ghi</button>
+                                <button onclick="applyManualJumpScore()" class="px-2 py-0.5 bg-emerald-600 text-white font-bold rounded cursor-pointer">Đặt</button>
                             </div>
                         </div>
                     </div>
@@ -354,6 +387,14 @@
                             </div>
                             <span class="text-[11px] text-slate-300 mt-1" id="live-target-hint">Đạt: ≥ 14 | Tốt: ≥ 20</span>
                         </div>
+                    </div>
+
+                    <!-- Nút Xác nhận Tiếp Đất lớn bên cột phải (Hiển thị thêm khi ở chế độ Bật xa) -->
+                    <div id="sidebar-jump-confirm-box" class="hidden pt-1">
+                        <button onclick="confirmLandingScore()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-slate-950 font-extrabold text-xs uppercase tracking-wide shadow-lg flex items-center justify-center gap-2 cursor-pointer transition active:scale-95">
+                            <i class="fa-solid fa-circle-check text-base"></i>
+                            <span>Xác Nhận Thành Tích Tiếp Đất & Lưu</span>
+                        </button>
                     </div>
 
                     <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-700 space-y-2">
@@ -462,7 +503,7 @@
 
     <script>
         // ============================================================================
-        // 0. POLYFILL AN TOÀN CHO CANVAS (TRÁNH LỖI MÀN HÌNH ĐEN TRÊN MỌI TRÌNH DUYỆT)
+        // 0. HÀM VẼ KHUNG BO GÓC AN TOÀN
         // ============================================================================
         function drawSafeRoundedRect(ctx, x, y, w, h, r) {
             const radius = Math.min(r || 8, Math.abs(w) / 2, Math.abs(h) / 2);
@@ -535,7 +576,7 @@
             },
             jump: {
                 id: 'jump', name: 'Bật xa tại chỗ (cm)', shortName: 'Bật xa tại chỗ', unit: 'cm',
-                angleDown: 120, angleUp: 165, totalTime: 15
+                angleDown: 120, angleUp: 165, totalTime: 20
             }
         };
 
@@ -562,13 +603,16 @@
         let activeMediaStream = null;
         let isRealCameraReady = false;
 
+        // Trạng thái Bật xa tại chỗ (Có quản lý trạng thái Tiếp đất & Xác nhận thành tích)
         let jumpCalib = {
             startLineX: 0.20,
             refLineX: 0.82,
             realDistCm: 250,
             draggingMarker: null,
-            landingX: null,
-            liveFootCm: 0
+            landingX: null,         // Vị trí gót chân tiếp đất tốt nhất / đang chờ xác nhận
+            liveHeelX: null,        // Vị trí gót chân hiện tại theo thời gian thực
+            liveFootCm: 0,          // Số đo cm tại gót chân hiện tại
+            isConfirmed: false      // Đã bấm nút "Xác nhận Tiếp Đất" hay chưa
         };
 
         let simTime = 0;
@@ -626,7 +670,7 @@
         }
 
         // ============================================================================
-        // 4. THUẬT TOÁN CHẤM ĐIỂM AI
+        // 4. THUẬT TOÁN CHẤM ĐIỂM AI & THEO DÕI TIẾP ĐẤT BẬT XA
         // ============================================================================
         function processExerciseBiomechanics(landmarks) {
             if (!landmarks || landmarks.length < 33) {
@@ -705,32 +749,104 @@
                 const rearHeelX = dirSign > 0 ? Math.min(leftHeel.x, rightHeel.x) : Math.max(leftHeel.x, rightHeel.x);
 
                 const currentCm = xToJumpCm(rearHeelX);
+                jumpCalib.liveHeelX = rearHeelX;
                 jumpCalib.liveFootCm = currentCm;
-                progressBar = interp(currentCm, 0, jumpCalib.realDistCm, 0, 100);
+                progressBar = interp(counter > 0 ? counter : currentCm, 0, jumpCalib.realDistCm, 0, 100);
 
-                if (!isRunning && !isFinished) {
-                    feedback = currentCm <= 20 ? 'Dung sat Vach 0cm -> Bam [Bat dau]' : `Vi tri chan: ${currentCm} cm`;
-                }
-
-                if (isRunning && !isFinished) {
-                    if (currentCm <= 22) {
-                        feedback = 'Giam nhay tu Vach Bat Dau (0cm)!';
-                    } else if (currentCm > 35 && currentCm > counter) {
-                        counter = currentCm;
-                        jumpCalib.landingX = rearHeelX;
-                        feedback = `Vi tri roi xuong: ${counter} cm!`;
-                        playBeep(950, 120);
-                        updateLiveScoreUI();
-                        updateJumpPanelLabels();
+                // Nếu chưa xác nhận chốt kết quả tiếp đất thì liên tục cập nhật vị trí tiếp đất tạm thời
+                if (!jumpCalib.isConfirmed) {
+                    if (!isRunning && !isFinished) {
+                        if (currentCm <= 20) {
+                            feedback = 'Dung sat Vach 0cm -> Bam [Bat dau] hoac nhay!';
+                        } else {
+                            // Cho phép theo dõi vị trí chân ngay cả khi chưa bấm S để bấm "Xác nhận Tiếp Đất" bất cứ lúc nào
+                            counter = currentCm;
+                            jumpCalib.landingX = rearHeelX;
+                            feedback = `Vi tri tiep dat tam thoi: ${currentCm} cm -> Bam [Xac nhan Tiep Dat]`;
+                            updateLiveScoreUI();
+                            updateJumpPanelLabels();
+                        }
+                    } else if (isRunning && !isFinished) {
+                        if (currentCm <= 22) {
+                            feedback = 'Hay bat nhay ve phia truoc!';
+                        } else if (currentCm > 30) {
+                            // Cập nhật vị trí rơi khi học sinh bật nhảy qua 30cm và chạm đất
+                            if (currentCm > counter || jumpCalib.draggingMarker === null) {
+                                counter = currentCm;
+                                jumpCalib.landingX = rearHeelX;
+                                feedback = `Tiep dat: ${counter} cm! Bam [Xac nhan Tiep Dat] de chot KQ!`;
+                                updateLiveScoreUI();
+                                updateJumpPanelLabels();
+                            }
+                        }
                     }
                 }
             }
         }
 
+        // HÀM MỚI: XÁC NHẬN THÀNH TÍCH KHI NGƯỜI ĐƯỢC KIỂM TRA BẬT XA TIẾP ĐẤT
+        function confirmLandingScore() {
+            if (currentExercise !== 'jump') {
+                switchExercise('jump');
+            }
+
+            // Nếu đang có vị trí gót chân trực tiếp mà counter chưa nhận, lấy ngay vị trí gót chân hiện tại
+            if (counter <= 0 && jumpCalib.liveFootCm > 0) {
+                counter = jumpCalib.liveFootCm;
+                jumpCalib.landingX = jumpCalib.liveHeelX;
+            }
+
+            if (counter <= 0) {
+                showToast('Chưa phát hiện khoảng cách tiếp đất (> 0cm)! Hãy thực hiện nhảy hoặc kéo vạch rơi trước.', 'warning');
+                return;
+            }
+
+            jumpCalib.isConfirmed = true;
+            isRunning = false;
+            isFinished = true;
+            feedback = `DA XAC NHAN TIEP DAT: ${counter} cm!`;
+
+            playBeep(1000, 150);
+            setTimeout(() => playBeep(1350, 450), 170);
+
+            updateLiveScoreUI();
+            updateJumpPanelLabels();
+
+            const statusBadge = document.getElementById('jump-status-badge-text');
+            if (statusBadge) {
+                statusBadge.innerText = `✅ ĐÃ CHỐT TIẾP ĐẤT: ${counter} cm`;
+                statusBadge.className = 'text-emerald-300 font-extrabold';
+            }
+
+            const btnStartText = document.getElementById('btn-start-text');
+            if (btnStartText) btnStartText.innerText = `Bắt đầu ${totalTime}s [S]`;
+
+            if (!dataSaved) {
+                saveRecordToTable(student, 'jump', counter);
+                dataSaved = true;
+            } else {
+                showToast(`Đã xác nhận thành tích tiếp đất: ${counter} cm!`, 'success');
+            }
+        }
+
         function updateJumpPanelLabels() {
             const landLbl = document.getElementById('jump-landing-pos-label');
+            const statusBadge = document.getElementById('jump-status-badge-text');
             if (landLbl) {
-                landLbl.innerText = (jumpCalib.landingX !== null && counter > 0) ? `${counter} cm` : 'Chưa nhảy';
+                if (jumpCalib.landingX !== null && counter > 0) {
+                    landLbl.innerText = jumpCalib.isConfirmed ? `✅ ${counter} cm (Đã chốt)` : `${counter} cm (Chờ xác nhận)`;
+                } else {
+                    landLbl.innerText = 'Chưa nhảy';
+                }
+            }
+            if (statusBadge && !jumpCalib.isConfirmed) {
+                if (counter > 0) {
+                    statusBadge.innerText = `⏳ Tiếp đất tạm thời: ${counter} cm (Bấm Xác nhận!)`;
+                    statusBadge.className = 'text-amber-300 font-bold';
+                } else {
+                    statusBadge.innerText = 'Đang chờ bật nhảy...';
+                    statusBadge.className = 'text-white';
+                }
             }
         }
 
@@ -936,15 +1052,17 @@
             ctx.textAlign = 'center';
             ctx.fillText(`📏 MỐC (${jumpCalib.realDistCm}cm)`, refX, floorY - 147);
 
-            // Vạch Rơi Xuống (Tiếp đất)
+            // Vạch Rơi Xuống (Phân biệt rõ trạng thái Chờ Xác Nhận vs Đã Xác Nhận Tiếp Đất)
             if (jumpCalib.landingX !== null && counter > 0) {
                 const landPx = jumpCalib.landingX * w;
+                const isConfirmed = jumpCalib.isConfirmed;
+                const mainColor = isConfirmed ? '#22c55e' : '#f59e0b';
 
-                ctx.fillStyle = 'rgba(34, 197, 94, 0.30)';
+                ctx.fillStyle = isConfirmed ? 'rgba(34, 197, 94, 0.32)' : 'rgba(245, 158, 11, 0.25)';
                 ctx.fillRect(Math.min(startX, landPx), floorY - 14, Math.abs(landPx - startX), 36);
 
                 const midX = (startX + landPx) / 2;
-                ctx.strokeStyle = '#4ade80';
+                ctx.strokeStyle = mainColor;
                 ctx.lineWidth = 3.5;
                 ctx.setLineDash([8, 6]);
                 ctx.beginPath();
@@ -953,20 +1071,24 @@
                 ctx.stroke();
                 ctx.setLineDash([]);
 
-                ctx.strokeStyle = '#22c55e';
+                ctx.strokeStyle = mainColor;
                 ctx.lineWidth = 5;
                 ctx.beginPath();
                 ctx.moveTo(landPx, floorY - 170);
                 ctx.lineTo(landPx, floorY + 25);
                 ctx.stroke();
 
-                ctx.fillStyle = '#16a34a';
-                drawSafeRoundedRect(ctx, landPx - 95, floorY - 202, 190, 32, 8);
+                ctx.fillStyle = isConfirmed ? '#16a34a' : '#d97706';
+                drawSafeRoundedRect(ctx, landPx - 115, floorY - 205, 230, 34, 8);
                 ctx.fill();
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 13px sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText(`🎯 VỊ TRÍ RƠI: ${counter} CM`, landPx, floorY - 181);
+                ctx.fillText(
+                    isConfirmed ? `✅ ĐÃ XÁC NHẬN: ${counter} CM` : `⏳ TIẾP ĐẤT: ${counter} CM (Chờ chốt)`,
+                    landPx,
+                    floorY - 183
+                );
             }
 
             ctx.textAlign = 'left';
@@ -1057,14 +1179,20 @@
                 ctx.fillStyle = 'rgba(10, 14, 23, 0.95)';
                 ctx.strokeStyle = '#22c55e';
                 ctx.lineWidth = 3.5;
-                drawSafeRoundedRect(ctx, w / 2 - 310, h / 2 - 95, 620, 175, 16);
+                drawSafeRoundedRect(ctx, w / 2 - 320, h / 2 - 95, 640, 175, 16);
                 ctx.fill();
                 ctx.stroke();
 
                 ctx.fillStyle = '#facc15';
-                ctx.font = 'bold 26px sans-serif';
+                ctx.font = 'bold 25px sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText(`HOÀN THÀNH BÀI THI (${totalTime}s)!`, w / 2, h / 2 - 42);
+                ctx.fillText(
+                    currentExercise === 'jump'
+                        ? 'ĐÃ XÁC NHẬN THÀNH TÍCH BẬT XA TIẾP ĐẤT!'
+                        : `HOÀN THÀNH BÀI THI (${totalTime}s)!`,
+                    w / 2,
+                    h / 2 - 42
+                );
 
                 ctx.fillStyle = '#00ff44';
                 ctx.font = 'bold 30px sans-serif';
@@ -1072,7 +1200,7 @@
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 15px sans-serif';
-                ctx.fillText("Bấm nút [Đổi TS] hoặc [Thi lại] ngay thanh bên dưới màn hình", w / 2, h / 2 + 50);
+                ctx.fillText("Đã tự động lưu vào bảng! Bấm [Đổi TS] hoặc [Thi lại] ở thanh dưới màn hình", w / 2, h / 2 + 50);
                 ctx.textAlign = 'left';
             }
 
@@ -1080,7 +1208,7 @@
         }
 
         // ============================================================================
-        // 6. BỘ MÔ PHỎNG TƯ THẾ AI (LUÔN CHẠY KHI CHƯA CÓ CAMERA ĐỂ TRÁNH MÀN HÌNH ĐEN)
+        // 6. BỘ MÔ PHỎNG TƯ THẾ AI
         // ============================================================================
         function generateSimulatedLandmarks() {
             const lm = Array.from({ length: 33 }, () => ({ x: 0.5, y: 0.5, z: 0, visibility: 0.99 }));
@@ -1135,8 +1263,13 @@
                 let jumperYOffset = 0;
 
                 if (simJumpAnim.active) {
-                    simJumpAnim.progress += 0.025;
-                    if (simJumpAnim.progress >= 1) { simJumpAnim.progress = 1; simJumpAnim.active = false; }
+                    simJumpAnim.progress += 0.03;
+                    if (simJumpAnim.progress >= 1) {
+                        simJumpAnim.progress = 1;
+                        simJumpAnim.active = false;
+                        playBeep(880, 100);
+                        showToast('Học sinh đã tiếp đất! Hãy bấm nút [✅ Xác nhận Tiếp Đất] để chốt kết quả.', 'info');
+                    }
                     const p = simJumpAnim.progress;
                     jumperX = jumpCalib.startLineX + ((simJumpAnim.targetCm / jumpCalib.realDistCm) * pixelSpan) * p;
                     jumperYOffset = -0.22 * Math.sin(p * Math.PI);
@@ -1157,6 +1290,9 @@
         }
 
         function triggerSimJump() {
+            jumpCalib.isConfirmed = false;
+            isFinished = false;
+            dataSaved = false;
             if (!isRunning) startExam();
             simJumpAnim = { active: true, progress: 0, targetCm: parseInt(document.getElementById('sim-jump-slider')?.value) || 215 };
         }
@@ -1169,7 +1305,7 @@
         }
 
         // ============================================================================
-        // 7. VÒNG LẶP RENDER CHÍNH (BỌC TRY-CATCH ĐẢM BẢO KHÔNG BAO GIỜ ĐỨNG HÌNH ĐEN)
+        // 7. VÒNG LẶP RENDER CHÍNH
         // ============================================================================
         let mpPoseInstance = null;
         let isProcessingMp = false;
@@ -1186,9 +1322,7 @@
                         isProcessingMp = false;
                     });
                 }
-            } catch (e) {
-                console.warn('MediaPipe Pose fallback:', e);
-            }
+            } catch (e) {}
         }
 
         async function mainRenderLoop() {
@@ -1199,10 +1333,17 @@
                 if (isRunning && !isFinished) {
                     const elapsed = (Date.now() - startTime) / 1000;
                     remainingTime = Math.max(0, Math.ceil(totalTime - elapsed));
-                    if (remainingTime === 0) finishExamSession();
+                    if (remainingTime === 0) {
+                        // Đối với Gập bụng & Chống đẩy thì tự động kết thúc khi hết 30s;
+                        // Đối với Bật xa nếu đã có điểm tiếp đất thì tự động xác nhận luôn
+                        if (currentExercise === 'jump' && counter > 0) {
+                            confirmLandingScore();
+                        } else {
+                            finishExamSession();
+                        }
+                    }
                 }
 
-                // 1. Luôn vẽ nền sân tập sáng rõ trước tiên
                 const grad = ctx.createLinearGradient(0, 0, 0, h);
                 grad.addColorStop(0, '#0f172a');
                 grad.addColorStop(0.70, '#1e293b');
@@ -1211,7 +1352,6 @@
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, w, h);
 
-                // 2. Kiểm tra nếu Camera thực tế đã sẵn sàng thì vẽ hình Camera lên
                 const sourceMedia = cameraMode === 'ip' ? ipImgEl : videoEl;
                 isRealCameraReady = (cameraMode !== 'sim') && (
                     cameraMode === 'ip'
@@ -1228,17 +1368,14 @@
                     ctx.drawImage(sourceMedia, 0, 0, w, h);
                     ctx.restore();
 
-                    // Gửi trực tiếp videoEl (KHÔNG gửi canvasEl) vào MediaPipe để tránh treo màn hình
                     if (mpPoseInstance && !isProcessingMp) {
                         isProcessingMp = true;
                         mpPoseInstance.send({ image: sourceMedia }).catch(() => { isProcessingMp = false; });
                     }
                 } else {
-                    // Khi chưa có Camera thật hoặc đang ở chế độ Mô phỏng: Hiển thị người mẫu AI để thao tác ngay!
                     latestPoseLandmarks = generateSimulatedLandmarks();
                 }
 
-                // 3. Chấm điểm & Vẽ Khung định vị + Thước đo Bật xa + Khung xương + HUD
                 if (latestPoseLandmarks) {
                     processExerciseBiomechanics(latestPoseLandmarks);
                 }
@@ -1257,7 +1394,7 @@
         }
 
         // ============================================================================
-        // 8. QUẢN LÝ BẬT CAMERA AN TOÀN
+        // 8. QUẢN LÝ CAMERA
         // ============================================================================
         function stopCurrentVideoStream() {
             if (activeMediaStream) {
@@ -1286,7 +1423,6 @@
 
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 setAiStatus('Mô phỏng AI (Cần HTTPS cho Cam)');
-                showToast('Trình duyệt chặn Camera do chưa có HTTPS. Đang hiển thị Chế độ Mô phỏng để bạn sử dụng!', 'warning');
                 return;
             }
 
@@ -1316,7 +1452,6 @@
             } catch (err) {
                 document.getElementById('sim-control-overlay').classList.remove('hidden');
                 setAiStatus('Đang chạy Mô phỏng AI');
-                showToast('Chưa cấp quyền Camera -> Đang chạy sẵn Chế độ Mô phỏng AI!', 'info');
             }
         }
 
@@ -1431,12 +1566,14 @@
             document.getElementById('input-total-time').value = cfg.totalTime;
 
             const jumpDock = document.getElementById('onscreen-jump-dock');
+            const sidebarConfirmBox = document.getElementById('sidebar-jump-confirm-box');
             if (exKey === 'jump') {
                 document.getElementById('metric-title-label').innerText = 'THÀNH TÍCH BẬT XA';
                 document.getElementById('metric-unit-label').innerText = 'centimet (cm)';
                 document.getElementById('jump-calibration-panel').classList.remove('hidden');
                 document.getElementById('sim-jump-controls').classList.remove('hidden');
                 document.getElementById('sim-angle-controls').classList.add('hidden');
+                if (sidebarConfirmBox) sidebarConfirmBox.classList.remove('hidden');
                 jumpDock.classList.remove('hidden');
                 jumpDock.classList.add('flex');
             } else {
@@ -1445,6 +1582,7 @@
                 document.getElementById('jump-calibration-panel').classList.add('hidden');
                 document.getElementById('sim-jump-controls').classList.add('hidden');
                 document.getElementById('sim-angle-controls').classList.remove('hidden');
+                if (sidebarConfirmBox) sidebarConfirmBox.classList.add('hidden');
                 jumpDock.classList.add('hidden');
                 jumpDock.classList.remove('flex');
             }
@@ -1467,10 +1605,13 @@
 
         function clearLandingMarker() {
             jumpCalib.landingX = null;
+            jumpCalib.isConfirmed = false;
             counter = 0;
+            isFinished = false;
+            dataSaved = false;
             updateLiveScoreUI();
             updateJumpPanelLabels();
-            showToast('Đã xóa vạch rơi xuống!', 'info');
+            showToast('Đã xóa vạch rơi xuống để nhảy lượt mới!', 'info');
         }
 
         function updateJumpCalibration() {
@@ -1484,12 +1625,13 @@
 
         function applyManualJumpScore() {
             const val = parseInt(document.getElementById('manual-jump-cm').value);
-            if (!isNaN(val) && val >= 0) {
+            if (!isNaN(val) && val > 0) {
                 counter = val;
                 jumpCalib.landingX = jumpCmToX(val);
+                jumpCalib.isConfirmed = false;
                 updateLiveScoreUI();
                 updateJumpPanelLabels();
-                showToast(`Đã ghi thành tích bật xa: ${val} cm`, 'success');
+                showToast(`Đã đặt vạch tiếp đất tại ${val} cm. Bấm [✅ Xác nhận Tiếp Đất] để lưu!`, 'info');
             }
         }
 
@@ -1502,6 +1644,7 @@
             const normX = (clientX - rect.left) / rect.width;
             if (jumpCalib.landingX !== null && Math.abs(normX - jumpCalib.landingX) < 0.04) {
                 jumpCalib.draggingMarker = 'landing';
+                jumpCalib.isConfirmed = false;
             } else if (Math.abs(normX - jumpCalib.startLineX) < 0.045) {
                 jumpCalib.draggingMarker = 'start';
             } else if (Math.abs(normX - jumpCalib.refLineX) < 0.045) {
@@ -1543,6 +1686,7 @@
         function startExam() {
             counter = 0;
             jumpCalib.landingX = null;
+            jumpCalib.isConfirmed = false;
             totalTime = parseInt(document.getElementById('input-total-time').value) || 30;
             remainingTime = totalTime;
             startTime = Date.now();
@@ -1550,7 +1694,9 @@
             isFinished = false;
             dataSaved = false;
             stage = currentExercise === 'pushup' ? 'up' : 'down';
-            feedback = 'Bat dau! Thuc hien dong tac...';
+            feedback = currentExercise === 'jump'
+                ? 'Hay bat nhay! Khi tiep dat bam [Xac nhan Tiep Dat]'
+                : 'Bat dau! Thuc hien dong tac...';
 
             playBeep(900, 180);
             updateLiveScoreUI();
@@ -1572,6 +1718,7 @@
         function resetExam() {
             counter = 0;
             jumpCalib.landingX = null;
+            jumpCalib.isConfirmed = false;
             totalTime = parseInt(document.getElementById('input-total-time').value) || EXERCISE_CONFIGS[currentExercise].totalTime;
             remainingTime = totalTime;
             isRunning = false;
@@ -1595,6 +1742,10 @@
         }
 
         function manualSaveResult() {
+            if (currentExercise === 'jump' && !jumpCalib.isConfirmed && counter > 0) {
+                confirmLandingScore();
+                return;
+            }
             saveRecordToTable(student, currentExercise, counter);
             dataSaved = true;
         }
@@ -1648,7 +1799,7 @@
         function resetThresholdsToDefault() {
             EXERCISE_CONFIGS.situp.angleDown = 130; EXERCISE_CONFIGS.situp.angleUp = 65; EXERCISE_CONFIGS.situp.totalTime = 30;
             EXERCISE_CONFIGS.pushup.angleDown = 95; EXERCISE_CONFIGS.pushup.angleUp = 155; EXERCISE_CONFIGS.pushup.totalTime = 30;
-            EXERCISE_CONFIGS.jump.angleDown = 120; EXERCISE_CONFIGS.jump.angleUp = 165; EXERCISE_CONFIGS.jump.totalTime = 15;
+            EXERCISE_CONFIGS.jump.angleDown = 120; EXERCISE_CONFIGS.jump.angleUp = 165; EXERCISE_CONFIGS.jump.totalTime = 20;
             switchExercise(currentExercise);
         }
 
@@ -1693,7 +1844,7 @@
             document.getElementById('stat-pass-count').innerText = examRecords.filter(r => r.evaluation === 'Đạt').length;
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="py-6 text-center text-slate-400 text-xs">Chưa có dữ liệu. Bấm [Bắt đầu] ngay dưới màn hình Camera để đo.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="py-6 text-center text-slate-400 text-xs">Chưa có dữ liệu. Bấm [Bắt đầu] hoặc [✅ Xác nhận Tiếp Đất] dưới màn hình Camera để lưu.</td></tr>`;
                 return;
             }
 
@@ -1782,12 +1933,23 @@
             document.getElementById('standards-modal').classList.add('hidden');
         }
 
+        // PHÍM TẮT: [S] Bắt đầu, [R] Thi lại, [N] Đổi TS, [Space] hoặc [C] Xác nhận Tiếp Đất Bật Xa
         window.addEventListener('keydown', (e) => {
             const tag = document.activeElement?.tagName;
             if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
-            if (e.key === 's' || e.key === 'S') { e.preventDefault(); if (!isRunning) startExam(); }
-            else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); resetExam(); }
-            else if (e.key === 'n' || e.key === 'N') { e.preventDefault(); nextStudent(); }
+            if (e.key === 's' || e.key === 'S') {
+                e.preventDefault();
+                if (!isRunning) startExam();
+            } else if (e.key === 'r' || e.key === 'R') {
+                e.preventDefault();
+                resetExam();
+            } else if (e.key === 'n' || e.key === 'N') {
+                e.preventDefault();
+                nextStudent();
+            } else if ((e.code === 'Space' || e.key === 'c' || e.key === 'C') && currentExercise === 'jump') {
+                e.preventDefault();
+                confirmLandingScore();
+            }
         });
 
         function showToast(msg, type = 'info') {
@@ -1804,7 +1966,6 @@
             setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 2800);
         }
 
-        // KHỞI CHẠY NGAY LẬP TỨC KHI DOM SẴN SÀNG (KHÔNG ĐỢI CDN CHẬM)
         document.addEventListener('DOMContentLoaded', function () {
             syncStudentInfo();
             renderRecordsTable();
